@@ -11,10 +11,31 @@ const Navbar = () => {
               </NavLink>
             </li>
             <li className="navbar-item">
-              <NavLink to="/teachers" activeClassName="active">
+              <NavLink to="/teacherdirectory" activeClassName="active">
                 Teachers
               </NavLink>
             </li>
+            <li className="navbar-item">
+              <NavLink to="/studentDirectory" activeClassName="active">
+                Students
+              </NavLink>
+            </li>
+              <li className="navbar-item">
+              <NavLink to="/grades" activeClassName="active">
+                Grades
+              </NavLink>
+            </li>
+            <li className="navbar-item">
+              <NavLink to="/courseDashboard" activeClassName="active">
+                Course Dashboard
+              </NavLink>
+            </li>
+            <li className="navbar-item">
+              <NavLink to="/calander" activeClassName="active">
+                Calendar
+              </NavLink>
+            </li>
+            
           </ul>
         </nav>
       );
