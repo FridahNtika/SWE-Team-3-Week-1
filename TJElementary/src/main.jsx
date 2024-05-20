@@ -5,19 +5,19 @@ import "./index.css";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+import Layout from "./Layout";
 import { Root } from "./roots/Root.jsx";
-
 import { TeacherDirectory } from "./roots/TeacherDirectory.jsx";
 
 const router = createBrowserRouter([
 	{
 		path: "/",
-		element: <Root />,
-	},
+		element: <Layout><Root /></Layout>,
+	  },
 
 	{
 		path: "/teachers",
-		element: <TeacherDirectory />,
+		element: <Layout><TeacherDirectory /></Layout>,
 	},
 ]);
 
