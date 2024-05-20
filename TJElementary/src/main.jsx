@@ -9,6 +9,8 @@ import { Root } from "./roots/Root.jsx";
 
 import { TeacherDirectory } from "./roots/TeacherDirectory.jsx";
 
+import { ClassesDashboard } from "./roots/CurrentClasses.jsx";
+
 const router = createBrowserRouter([
 	{
 		path: "/",
@@ -18,6 +20,11 @@ const router = createBrowserRouter([
 	{
 		path: "/teachers",
 		element: <TeacherDirectory />,
+	},
+
+	{
+		path: "/classes",
+		element: <CurrentClasses />,
 	},
 ]);
 
