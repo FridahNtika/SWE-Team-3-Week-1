@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 // import "./App.css";
 import { db } from "../../firebase";
-import { collection, getDocs, addDoc, updateDoc, doc } from "firebase/firestore";
+import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from "firebase/firestore";
 
 
 export const TeacherDirectory = () => {
@@ -21,7 +21,7 @@ export const TeacherDirectory = () => {
         e.preventDefault();
         try {
             const docRef = await addDoc(collection(db, "teachers"), {
-                id: 123456,
+                //id: 123456,
                 email: `${teacherFirstName.toLowerCase()}${teacherLastName.toLowerCase()}@jefferson.edu`,
                 firstName: teacherFirstName,
                 lastName: teacherLastName,
@@ -51,6 +51,15 @@ export const TeacherDirectory = () => {
         }
     };
 
+    const handleDelete = async (id) => {
+        try {
+            await deleteDoc(doc(db, "teachers", id));
+            fetchTeachers();
+            console.log(`Deleted document with ID: ${id}`);
+        } catch (error) {
+            console.error("Error deleting document: ", error);
+        }
+    };
 
     useEffect(() => {
         fetchTeachers();
@@ -110,6 +119,9 @@ export const TeacherDirectory = () => {
                             <td>{teacher.firstName + " " + teacher.lastName}</td>
                             <td>{teacher.subject}</td>
                             <td>{teacher.email}</td>
+                            <td>
+                                <button onClick={() => handleDelete(teacher.id)}>Delete</button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
