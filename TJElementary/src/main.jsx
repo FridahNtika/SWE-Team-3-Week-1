@@ -14,31 +14,54 @@ import { Grades } from "./roots/Grades.jsx";
 import { Dashboard } from "./roots/Dashboard.jsx";
 
 const router = createBrowserRouter([
-	{
-		path: "/",
-		element: <Layout><Root /></Layout>,
-	  },
-  {
-    path: "/calendar",
-    element: <Layout><Calendar /></Layout>,
-  },
-  {
-    path: "/teacherdirectory",
-    element: <Layout><TeacherDirectory /></Layout>,
-  },
-  {
-      path: "/studentDirectory",
-      element: <Layout><StudentDirectory /></Layout>,
-  },
-  {
-      path: "/grades",
-      element: <Layout><Grades /></Layout>,
-  },
-  {
-      path: "/courseDashboard",
-      element: <Layout><Dashboard /></Layout>,
-  },
-
+    {
+        path: "/",
+        element: (
+            <Layout>
+                <Root />
+            </Layout>
+        ),
+    },
+    {
+        path: "/calendar",
+        element: (
+            <Layout>
+                <Calendar />
+            </Layout>
+        ),
+    },
+    {
+        path: "/teacherdirectory",
+        element: (
+            <Layout>
+                <TeacherDirectory />
+            </Layout>
+        ),
+    },
+    {
+        path: "/studentDirectory",
+        element: (
+            <Layout>
+                <StudentDirectory />
+            </Layout>
+        ),
+    },
+    {
+        path: "/grades",
+        element: (
+            <Layout>
+                <Grades />
+            </Layout>
+        ),
+    },
+    {
+        path: "/courseDashboard",
+        element: (
+            <Layout>
+                <Dashboard />
+            </Layout>
+        ),
+    },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
