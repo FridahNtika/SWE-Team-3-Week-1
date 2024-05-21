@@ -6,7 +6,7 @@ import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Layout from "./Layout";
-import { Root } from "./roots/Root.jsx";
+import { Root } from "./roots/root.jsx";
 import { Calander } from "./roots/Calander.jsx";
 import { TeacherDirectory } from "./roots/TeacherDirectory.jsx";
 import { StudentDirectory } from "./roots/StudentDirectory.jsx";
