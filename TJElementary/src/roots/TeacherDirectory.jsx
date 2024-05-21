@@ -9,8 +9,8 @@ import { collection, getDocs, addDoc, updateDoc, doc } from "firebase/firestore"
 
 
 export const TeacherDirectory = () => {
-    const [teacherName, setTeacherName] = useState("");
-    const [teacherEmail, setTeacherEmail] = useState("");
+    const [teacherFirstName, setTeacherFirstName] = useState("");
+    const [teacherLastName, setTeacherLastName] = useState("");
     const [teacherSubject, setTeacherSubject] = useState("");
 
 
@@ -22,12 +22,14 @@ export const TeacherDirectory = () => {
         try {
             const docRef = await addDoc(collection(db, "teachers"), {
                 id: 123456,
-                email: teacherName + "@jefferson.edu",
-                name: teacherName,
+                email: `${teacherFirstName.toLowerCase()}${teacherLastName.toLowerCase()}@jefferson.edu`,
+                firstName: teacherFirstName,
+                lastName: teacherLastName,
                 subject: teacherSubject
             });
             console.log("Created doc with ID: ", docRef.id);
-            setTeacherName("");
+            setTeacherFirstName("");
+            setTeacherLastName("");
             setTeacherSubject("");
             fetchTeachers();
         } catch (error) {
@@ -59,19 +61,38 @@ export const TeacherDirectory = () => {
         <div>
             <h1>Teacher Directory</h1>
             <form onSubmit={handleSubmit}>
-                <label>Add a teacher:</label>
-                <input
-                    type="text"
-                    value={teacherName}
-                    onChange={(e) => setTeacherName(e.target.value)}
-                ></input>
-                <input
-                    type="text"
-                    value={teacherSubject}
-                    onChange={(e) => setTeacherSubject(e.target.value)}
-                ></input>
-                <br></br>
-                <button type="submit">Submit</button>
+                
+                <div>
+                    <label>Add a teacher:</label>
+                    <br></br>
+                    <label htmlFor="teacherFirstName">First Name:</label>
+                    <input
+                        type="text"
+                        id="teacherFirstName"
+                        value={teacherFirstName}
+                        onChange={(e) => setTeacherFirstName(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="teacherLastName">Last Name:</label>
+                    <input
+                        type="text"
+                        id="teacherLastName"
+                        value={teacherLastName}
+                        onChange={(e) => setTeacherLastName(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="teacherSubject">Subject:</label>
+                    <input
+                        type="text"
+                        id="teacherSubject"
+                        value={teacherSubject}
+                        onChange={(e) => setTeacherSubject(e.target.value)}
+                    />
+                    <br></br>
+                    <button type="submit">Submit</button>
+                </div>
             </form>
             <table>
                 <thead>
@@ -86,7 +107,7 @@ export const TeacherDirectory = () => {
                     {teachers.map((teacher) => (
                         <tr key={teacher.id}>
                             <td>{teacher.id}</td>
-                            <td>{teacher.name}</td>
+                            <td>{teacher.firstName + " " + teacher.lastName}</td>
                             <td>{teacher.subject}</td>
                             <td>{teacher.email}</td>
                         </tr>
