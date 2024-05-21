@@ -29,14 +29,26 @@ export const TeacherDirectory = () => {
     return (
         <div>
             <h1>Teacher Directory</h1>
-            <ul>
-                {teachers.map((teacher) => (
-                    <li key={teacher.id}>
-                        <h2>{teacher.name}</h2>
-                        <p>Subject: {teacher.subject}</p>
-                    </li>
-                ))}
-            </ul>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Number</th>
+                        <th>Name</th>
+                        <th>Subject</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {teachers.map((teacher) => (
+                        <tr key={teacher.id}>
+                            <td>{teacher.id}</td>
+                            <td>{teacher.name}</td>
+                            <td>{teacher.subject}</td>
+                            <td>{teacher.email}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 };
