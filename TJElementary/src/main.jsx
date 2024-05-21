@@ -7,7 +7,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Layout from "./Layout";
 import { Root } from "./roots/Root.jsx";
-import { Calander } from "./roots/Calander.jsx";
+import { Calender } from "./roots/Calender.jsx";
 import { TeacherDirectory } from "./roots/TeacherDirectory.jsx";
 import { StudentDirectory } from "./roots/StudentDirectory.jsx";
 import { Grades } from "./roots/Grades.jsx";
@@ -19,8 +19,8 @@ const router = createBrowserRouter([
 		element: <Layout><Root /></Layout>,
 	  },
   {
-    path: "/calander",
-    element: <Layout><Calander /></Layout>,
+    path: "/calender",
+    element: <Layout><Calender /></Layout>,
   },
   {
     path: "/teacherdirectory",
