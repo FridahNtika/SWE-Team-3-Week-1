@@ -11,10 +11,13 @@ import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from "firebase
 export const TeacherDirectory = () => {
     const [teacherFirstName, setTeacherFirstName] = useState("");
     const [teacherLastName, setTeacherLastName] = useState("");
+    const [teacherFullName, setTeacherFullName] = useState("");
     const [teacherSubject, setTeacherSubject] = useState("");
     const [message, setMessage] = useState("");
 
     const [teachers, setTeachers] = useState([]);
+    const [editingId, setEditingId] = useState(null);
+    const [editingTeacher, setEditingTeacher] = useState({});
 
 
     const handleSubmit = async (e) => {
@@ -31,7 +34,9 @@ export const TeacherDirectory = () => {
                 email: `${teacherFirstName.toLowerCase()}${teacherLastName.toLowerCase()}@jefferson.edu`,
                 firstName: teacherFirstName,
                 lastName: teacherLastName,
-                subject: teacherSubject
+                subject: teacherSubject,
+                fullName: teacherFullName
+                
             });
             console.log("Created doc with ID: ", docRef.id);
             setMessage(`Teacher ${teacherFirstName} ${teacherLastName} added successfully.`);
@@ -67,6 +72,35 @@ export const TeacherDirectory = () => {
             console.error("Error deleting document: ", error);
         }
     };
+
+    const handleEdit = (teacher) => {
+        setEditingId(teacher.id);
+        setEditingTeacher(teacher);
+    };
+
+    const handleSave = async (id) => {
+        try {
+            const docRef = doc(db, "teachers", id);
+            await updateDoc(docRef, editingTeacher);
+            console.log(`Updated document with ID: ${id}`);
+            setEditingId(null);
+            setEditingTeacher({});
+            fetchTeachers();
+        } catch (error) {
+            console.error("Error updating document: ", error);
+        }
+    };
+
+    const handleCancel = () => {
+        setEditingId(null);
+        setEditingTeacher({});
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setEditingTeacher({ ...editingTeacher, [name]: value });
+    };
+
 
     useEffect(() => {
         fetchTeachers();
@@ -115,7 +149,8 @@ export const TeacherDirectory = () => {
                 <thead>
                     <tr>
                         <th>ID Number</th>
-                        <th>Name</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
                         <th>Subject</th>
                         <th>Email</th>
                     </tr>
@@ -124,11 +159,55 @@ export const TeacherDirectory = () => {
                     {teachers.map((teacher) => (
                         <tr key={teacher.id}>
                             <td>{teacher.id}</td>
-                            <td>{teacher.firstName + " " + teacher.lastName}</td>
-                            <td>{teacher.subject}</td>
+                            <td>
+                                {editingId === teacher.id ? (
+                                    <input
+                                        type="text"
+                                        name="firstName"
+                                        value={editingTeacher.firstName}
+                                        onChange={handleChange}
+                                    />
+                                ) : (
+                                    teacher.firstName
+                                )}
+                            </td>
+                            <td>
+                                {editingId === teacher.id ? (
+                                    <input
+                                        type="text"
+                                        name="lastName"
+                                        value={editingTeacher.lastName}
+                                        onChange={handleChange}
+                                    />
+                                ) : (
+                                    teacher.lastName
+                                )}
+                            </td>
+                            <td>
+                                {editingId === teacher.id ? (
+                                    <input
+                                        type="text"
+                                        name="subject"
+                                        value={editingTeacher.subject}
+                                        onChange={handleChange}
+                                    />
+                                ) : (
+                                    teacher.subject
+                                )}
+                            </td>
                             <td>{teacher.email}</td>
                             <td>
-                                <button onClick={() => handleDelete(teacher.id)}>Delete</button>
+                                {editingId === teacher.id ? (
+                                    <>
+                                        <button onClick={() => handleSave(teacher.id)}>Save</button>
+                                        <button onClick={handleCancel}>Cancel</button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button onClick={() => handleEdit(teacher)}>Edit</button>
+                                        <button onClick={() => handleDelete(teacher.id)}>Delete</button>
+                                    </>
+                                )}
                             </td>
                         </tr>
                     ))}
