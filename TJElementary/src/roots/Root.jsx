@@ -38,6 +38,7 @@ export const Root = () => {
           &gt;
         </div>
       </div>
+      <h2 className="welcome-text">Welcome to TJ Elementary School</h2>
     </div>
   );
 };

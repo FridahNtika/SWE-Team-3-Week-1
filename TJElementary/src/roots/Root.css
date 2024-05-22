@@ -1,9 +1,10 @@
-  .root-container {
+.root-container {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     position: relative;
@@ -32,14 +33,14 @@
     font-weight: bold;
     cursor: pointer;
     padding: 0.5rem;
-    background-color: #007bff; 
-    color: #fff; 
+    background-color: #007bff;
+    color: #fff;
     border-radius: 50%;
     transition: background-color 0.3s ease;
   }
   
   .arrow:hover {
-    background-color: #0056b3; 
+    background-color: #0056b3;
   }
   
   .left {
@@ -48,4 +49,23 @@
   
   .right {
     right: 1rem;
+  }
+  
+  .welcome-text {
+    margin-top: 2rem;
+    font-size: 2rem;
+    text-align: center;
+    animation: zoomInOut 1s ease-in-out infinite;
+  }
+  
+  @keyframes zoomInOut {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
