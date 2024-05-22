@@ -55,12 +55,12 @@ import calendar from "../assets/calendar.jpg";
 export const Root = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const images = [
-    { src: logo, description: "TJ Elementary School Logo" },
-    { src: student, description: "Student Information" },
-    { src: teacher, description: "Teacher Directory" },
-    { src: grades, description: "Student Grades" },
-    { src: course, description: "Course Catalog" },
-    { src: calendar, description: "School Calendar" },
+    { src: logo, description: "TJ Elementary School Logo. Click here to return to the main dashboard." },
+    { src: student, description: "Student Information and Enrollment. View and manage student profiles, including personal details and class enrollments. Enroll new students or update existing student records." },
+    { src: teacher, description: "Teacher Directory and Class Management. Browse the teacher directory and access class rosters. Assign teachers to classes and manage student enrollments for each class." },
+    { src: grades, description: "Student Grades and Class Rosters. View class rosters and monitor student performance. Teachers can input and update grades for their assigned classes." },
+    { src: course, description: "Class Information and Schedules. Access details about each class offered at TJ Elementary, including course descriptions, schedules, and assigned teachers." },
+    { src: calendar, description: "School Calendar and Events. Stay up-to-date with the school's calendar of events, including holidays, assemblies, field trips, and other important dates." },
   ];
 
   const handlePrevImage = () => {
