@@ -1,0 +1,32 @@
+.root-container {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Styles for smaller screens */
+  @media (max-width: 768px) {
+    .logo {
+      max-width: 90vw; /* Increased from 80vw */
+      max-height: 90vh; /* Increased from 80vh */
+    }
+  }
+  
+  /* Styles for larger screens */
+  @media (min-width: 1200px) {
+    .logo {
+      max-width: 60vw; /* Increased from 40vw */
+      max-height: 60vh; /* Increased from 40vh */
+    }
+  }
+  
+  .logo {
+    width: 100%;
+    height: auto;
+    max-width: 1200px; /* Increased from 800px */
+    display: block;
+  }

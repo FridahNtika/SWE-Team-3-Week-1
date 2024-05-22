@@ -1,13 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import logo from "../assets/logo.jpg"; 
+import "./Root.css";
 
 export const Root = () => {
-    return (
-        <>
-            <h1>Welcome to TJ Elementary</h1>
-            <Link to={"/teachers"}>Go to teacher directory page</Link>
-            <br />
-            <Link to={"/teachers"}>Go to teacher directory page</Link>
-        </>
-    );
+  return (
+    <div className="root-container">
+      <img src={logo} alt="Logo" className="logo" />
+    </div>
+  );
 };
