@@ -1,7 +1,7 @@
-// src/roots/Grades.jsx
 import React, { useState, useEffect } from "react";
 import { db } from "../../firebase";
 import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
+import './Grades.css';
 
 export const Grades = () => {
     const [students, setStudents] = useState([]);
@@ -9,10 +9,17 @@ export const Grades = () => {
     const [currentStudentId, setCurrentStudentId] = useState(null);
     const [currentGrade, setCurrentGrade] = useState("");
 
+    useEffect(() => {
+        fetchStudents();
+    }, []);
+
     const fetchStudents = async () => {
         try {
             const querySnapshot = await getDocs(collection(db, "students"));
-            const studentsArray = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            const studentsArray = querySnapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data()
+            }));
             setStudents(studentsArray);
         } catch (error) {
             console.error("Error fetching students: ", error);
@@ -29,7 +36,6 @@ export const Grades = () => {
         try {
             const studentDoc = doc(db, "students", currentStudentId);
             await updateDoc(studentDoc, { grade: currentGrade });
-            console.log("Updated doc with ID: ", currentStudentId);
             setEditMode(false);
             setCurrentStudentId(null);
             setCurrentGrade("");
@@ -39,14 +45,10 @@ export const Grades = () => {
         }
     };
 
-    useEffect(() => {
-        fetchStudents();
-    }, []);
-
     return (
-        <div>
-            <h1>Grades</h1>
-            <table>
+        <div className="grades-container">
+            <h1 className="grades-title">Grades</h1>
+            <table className="grades-table">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -60,21 +62,21 @@ export const Grades = () => {
                             <td>{student.firstName} {student.lastName}</td>
                             <td>{student.grade || "N/A"}</td>
                             <td>
-                                <button onClick={() => handleEdit(student)}>Edit Grade</button>
+                                <button className="edit-button" onClick={() => handleEdit(student)}>Edit Grade</button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
             {editMode && (
-                <div>
+                <div className="edit-grade-container">
                     <h3>Edit Grade</h3>
                     <input
                         type="text"
                         value={currentGrade}
                         onChange={(e) => setCurrentGrade(e.target.value)}
                     />
-                    <button onClick={updateGrade}>Update Grade</button>
+                    <button className="update-button" onClick={updateGrade}>Update Grade</button>
                 </div>
             )}
         </div>

@@ -33,6 +33,9 @@
 .navbar-item .active {
   background-color: var(--teal);
   color: var(--white);
+  border-radius: 5px;
+  padding: 0px 2px; /* Increase padding for wider highlighting */
+
 }
 
 .navbar-item a {
