@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from "react";
 import { db } from "../../firebase";
-import { collection, getDocs, addDoc, updateDoc, doc } from "firebase/firestore";
+import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from "firebase/firestore";
 
 export const Dashboard = () => {
     // have a section to filter the courses**
@@ -13,30 +13,6 @@ export const Dashboard = () => {
     const [code, setCode] = useState('');
     const [teacher, setTeacher] = useState('');
     const [max, setMax] = useState(0);
-
-    //create operation
-    //allows an administrator to add a new course
-    const handleSubmit = async (evt) => {
-        evt.preventDefault();
-        try {
-            const docRef = await addDoc(collection(db, "classes"), {
-                Title: title,
-                Description: description,
-                'Course Code': code,
-                Teacher: teacher,
-                'Max Enrollment': max
-            });
-            console.log(docRef);
-            setCode('');
-            setDescription('');
-            setMax(0);
-            setTeacher('');
-            setTitle('');
-        } catch (error) {
-            setError(error.message);
-            console.error("Error adding the course: ", error);
-        }
-    };
 
     //read operation
     //gets all courses in the database and prints them out
@@ -63,6 +39,51 @@ export const Dashboard = () => {
     useEffect(() => {
         fetchCourses();
     }, []);
+
+    //create operation
+    //allows an administrator to add a new course
+    const handleSubmit = async (evt) => {
+        evt.preventDefault();
+        try {
+            const docRef = await addDoc(collection(db, "classes"), {
+                Title: title,
+                Description: description,
+                'Course Code': code,
+                Teacher: teacher,
+                'Max Enrollment': max
+            });
+            console.log(docRef);
+            setCode('');
+            setDescription('');
+            setMax(0);
+            setTeacher('');
+            setTitle('');
+        } catch (error) {
+            setError(error.message);
+            console.error("Error adding the course: ", error);
+        }
+        fetchCourses();
+    };
+
+    //update operation
+    //allows administrators to update the existing class
+    const handleUpdate = async () => {
+        await updateDoc(doc(db, collectionName, ID), {
+        property: newValue
+      });
+    }
+
+    //delete operation
+    //allows administrators to delete an existing class
+    const handleDelete = async (evt) => {
+        evt.preventDefault();
+        try {
+            await deleteDoc(doc(db, "classes", ID))
+        } catch (error) {
+            setError(error.message);
+            console.error("Error deleting the course: ", error);
+        };
+    }
 
     return (
     <>
@@ -114,6 +135,35 @@ export const Dashboard = () => {
                     onChange={(evt) => setMax(evt.target.value)}>
                     </input></label><br></br>
                     <button type='submit'>Add</button>
+                </fieldset>
+            </form>
+        </div>
+    </section>
+    <br></br>
+    <section>
+        <div className='updateEnrollment'>
+            <form onSubmit={handleUpdate}>
+                <fieldset>
+                    <legend> Update Enrollment For A Class </legend>
+                    <label>Course Code: <input type='text' id='codeRemove' value={code} 
+                    onChange={(evt) => setCode(evt.target.value)}>
+                    </input></label><br></br>
+                    <button type='submit'>Add Student(s)</button>
+                </fieldset>
+            </form>
+        </div>
+    </section>
+    <br></br>
+    <section>
+        <div className='removeCourse'>
+            <form onSubmit={handleDelete}>
+                <fieldset>
+                    <legend> Delete Course </legend>
+                    <p>Please note that this action is irreversible</p>
+                    <label>Course Code: <input type='text' id='codeRemove' value={code} 
+                    onChange={(evt) => setCode(evt.target.value)}>
+                    </input></label><br></br>
+                    <button type='submit'>Delete</button>
                 </fieldset>
             </form>
         </div>
