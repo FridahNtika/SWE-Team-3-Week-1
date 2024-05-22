@@ -1,4 +1,4 @@
-.root-container {
+  /* .root-container {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -6,27 +6,87 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
   }
   
-  /* Styles for smaller screens */
-  @media (max-width: 768px) {
-    .logo {
-      max-width: 90vw; /* Increased from 80vw */
-      max-height: 90vh; /* Increased from 80vh */
-    }
+  .slideshow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
   }
   
-  /* Styles for larger screens */
-  @media (min-width: 1200px) {
-    .logo {
-      max-width: 60vw; /* Increased from 40vw */
-      max-height: 60vh; /* Increased from 40vh */
-    }
+  .slideshow-image {
+    max-width: 80vw;
+    max-height: 80vh;
   }
   
-  .logo {
-    width: 100%;
-    height: auto;
-    max-width: 1200px; /* Increased from 800px */
-    display: block;
+  .arrow {
+    position: absolute;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+  }
+  
+  .left {
+    left: 1rem;
+  }
+  
+  .right {
+    right: 1rem;
+  } */
+
+  .root-container {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  
+  .slideshow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  
+  .slideshow-image {
+    max-width: 80vw;
+    max-height: 80vh;
+    transition: filter 0.3s ease;
+  }
+  
+  .slideshow-image:hover {
+    filter: brightness(1.2);
+  }
+  
+  .arrow {
+    position: absolute;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0.5rem;
+    background-color: #007bff; /* Change this to your desired theme color */
+    color: #fff; /* Change this to a contrasting color for better visibility */
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+  }
+  
+  .arrow:hover {
+    background-color: #0056b3; /* Change this to a darker shade of your theme color */
+  }
+  
+  .left {
+    left: 1rem;
+  }
+  
+  .right {
+    right: 1rem;
   }
