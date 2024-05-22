@@ -4,7 +4,6 @@ import { db } from "../../firebase";
 import { collection, getDocs } from "firebase/firestore";
 
 export const Dashboard = () => {
-    // get the courses from the database
     /* iterate through each course printing out the:
     1. current enrolment
     2. title 
@@ -13,23 +12,23 @@ export const Dashboard = () => {
     const [courses, setCourses] = useState([]);
     const [error, setError] = useState(null);
 
-    const getCourses = async () => {
+    const fetchCourses = async () => {
         try {
-            const allDocs = await getDocs(collection(db, 'classes'));
-            let courseArray = [];
-            //allDocs.forEach((doc) => console.log(doc.data()))
-            allDocs.forEach((doc) => 
-                courseArray.push(doc.data()));
-            setCourses(courseArray);
-            console.log(courses);
+            const querySnapshot = await getDocs(collection(db, "classes"));
+            let coursesArray = [];
+            querySnapshot.forEach((doc) => {
+                coursesArray.push({ id: doc.id, ...doc.data() });
+            });
+            console.log(coursesArray);
+            setCourses(coursesArray);
         } catch (error) {
-            setError(error.message);
-        };
-    }
+            console.error("Error fetching courses: ", error);
+        }
+    };
 
     useEffect(() => {
-        getCourses();
-        }, []);
+        fetchCourses();
+    }, []);
 
     return (
     <>
@@ -41,18 +40,6 @@ export const Dashboard = () => {
             ; Total courses offered: 
             <b> 56*</b>
         </div>
-        {/* iterate through each course here */}
-        {courses.map((course) => (
-            <section>
-                <div key={course}>
-                    <p>{course[0].title}</p>
-                    <p>{course.descr}</p>
-                    <p>{course.teacher}</p>
-                    <p>Current enrollment: {course.current}</p>
-                    <p>Max enrollment: {course.max}</p>
-                </div>
-            </section>
-        ))}
     </div>
     </>
     );
