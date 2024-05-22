@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export const ClassesDashboard = () => {
+export const CurrentClasses = () => {
 	return <div>Current Classes Dashboard</div>;
 }
