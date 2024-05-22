@@ -80,8 +80,14 @@ export const TeacherDirectory = () => {
 
     const handleSave = async (id) => {
         try {
+            const updatedEmail = `${editingTeacher.firstName.toLowerCase()}${editingTeacher.lastName.toLowerCase()}@jefferson.edu`;
             const docRef = doc(db, "teachers", id);
-            await updateDoc(docRef, editingTeacher);
+            await updateDoc(docRef, {
+                firstName: editingTeacher.firstName,
+                lastName: editingTeacher.lastName,
+                subject: editingTeacher.subject,
+                email: updatedEmail,
+            });
             console.log(`Updated document with ID: ${id}`);
             setEditingId(null);
             setEditingTeacher({});
