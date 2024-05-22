@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 // import "./App.css";
 import { db } from "../../firebase";
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from "firebase/firestore";
+import { TextField, Button, Card, CardContent, Typography, Container, Grid } from "@mui/material";
 
 
 export const TeacherDirectory = () => {
@@ -114,111 +115,111 @@ export const TeacherDirectory = () => {
 
 
     return (
-        <div>
+        <Container>
             <h1>Teacher Directory</h1>
             {<p>{message}</p>}
             <form onSubmit={handleSubmit}>
-                
-                <div>
-                    <label>Add a teacher:</label>
-                    <br></br>
-                    <label htmlFor="teacherFirstName">First Name:</label>
-                    <input
-                        type="text"
-                        id="teacherFirstName"
-                        value={teacherFirstName}
-                        onChange={(e) => setTeacherFirstName(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="teacherLastName">Last Name:</label>
-                    <input
-                        type="text"
-                        id="teacherLastName"
-                        value={teacherLastName}
-                        onChange={(e) => setTeacherLastName(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="teacherSubject">Subject:</label>
-                    <input
-                        type="text"
-                        id="teacherSubject"
-                        value={teacherSubject}
-                        onChange={(e) => setTeacherSubject(e.target.value)}
-                    />
-                    <br></br>
-                    <button type="submit">Submit</button>
-                </div>
+                <Grid container spacing={3}>
+                    <Grid item xs={14} sm={6}>
+                        <TextField
+                            label="First Name"
+                            variant="outlined"
+                            value={teacherFirstName}
+                            onChange={(e) => setTeacherFirstName(e.target.value)}
+                            fullWidth
+                            margin="dense"
+                            size="small"
+                        />
+                    </Grid>
+                    <Grid item xs={14} sm={6}>
+                        <TextField
+                            label="Last Name"
+                            variant="outlined"
+                            value={teacherLastName}
+                            onChange={(e) => setTeacherLastName(e.target.value)}
+                            fullWidth
+                            margin="dense"
+                            size="small"
+                        />
+                    </Grid>
+                    <Grid item xs={14} sm={6}>
+                        <TextField
+                            label="Subject"
+                            variant="outlined"
+                            value={teacherSubject}
+                            onChange={(e) => setTeacherSubject(e.target.value)}
+                            fullWidth
+                            margin="dense"
+                            size="small"
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Button variant="contained" color="primary" type="submit">
+                            Add Teacher
+                        </Button>
+                    </Grid>
+                </Grid>
             </form>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID Number</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Subject</th>
-                        <th>Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {teachers.map((teacher) => (
-                        <tr key={teacher.id}>
-                            <td>{teacher.id}</td>
-                            <td>
-                                {editingId === teacher.id ? (
-                                    <input
-                                        type="text"
-                                        name="firstName"
-                                        value={editingTeacher.firstName}
-                                        onChange={handleChange}
-                                    />
-                                ) : (
-                                    teacher.firstName
-                                )}
-                            </td>
-                            <td>
-                                {editingId === teacher.id ? (
-                                    <input
-                                        type="text"
-                                        name="lastName"
-                                        value={editingTeacher.lastName}
-                                        onChange={handleChange}
-                                    />
-                                ) : (
-                                    teacher.lastName
-                                )}
-                            </td>
-                            <td>
-                                {editingId === teacher.id ? (
-                                    <input
-                                        type="text"
-                                        name="subject"
-                                        value={editingTeacher.subject}
-                                        onChange={handleChange}
-                                    />
-                                ) : (
-                                    teacher.subject
-                                )}
-                            </td>
-                            <td>{teacher.email}</td>
-                            <td>
+            <Grid container spacing={2} marginTop={2}>
+                {teachers.map((teacher) => (
+                    <Grid item xs={12} sm={6} md={4} key={teacher.id}>
+                        <Card>
+                            <CardContent>
                                 {editingId === teacher.id ? (
                                     <>
-                                        <button onClick={() => handleSave(teacher.id)}>Save</button>
-                                        <button onClick={handleCancel}>Cancel</button>
+                                        <TextField
+                                            label="First Name"
+                                            name="firstName"
+                                            value={editingTeacher.firstName}
+                                            onChange={handleChange}
+                                            fullWidth
+                                            margin="normal"
+                                        />
+                                        <TextField
+                                            label="Last Name"
+                                            name="lastName"
+                                            value={editingTeacher.lastName}
+                                            onChange={handleChange}
+                                            fullWidth
+                                            margin="normal"
+                                        />
+                                        <TextField
+                                            label="Subject"
+                                            name="subject"
+                                            value={editingTeacher.subject}
+                                            onChange={handleChange}
+                                            fullWidth
+                                            margin="normal"
+                                        />
+                                        <Button variant="contained" color="primary" onClick={() => handleSave(teacher.id)}>
+                                            Save
+                                        </Button>
+                                        <Button variant="outlined" color="secondary" onClick={handleCancel}>
+                                            Cancel
+                                        </Button>
                                     </>
                                 ) : (
                                     <>
-                                        <button onClick={() => handleEdit(teacher)}>Edit</button>
-                                        <button onClick={() => handleDelete(teacher.id)}>Delete</button>
+                                        <Typography variant="h5">{teacher.firstName} {teacher.lastName}</Typography>
+                                        <Typography variant="body2">Subject: {teacher.subject}</Typography>
+                                        <Typography variant="body2">Email: {teacher.email}</Typography>
+                                        <Button 
+                                        variant="contained" 
+                                        color="primary" 
+                                        onClick={() => handleEdit(teacher)}
+                                        sx={{ marginRight: '10px' }}>
+                                            Edit
+                                        </Button>
+                                        <Button variant="contained" color="secondary" onClick={() => handleDelete(teacher.id)}>
+                                            Delete
+                                        </Button>
                                     </>
                                 )}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                ))}
+            </Grid>
+        </Container>
     );
 };
