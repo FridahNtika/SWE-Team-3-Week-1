@@ -5,29 +5,36 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 // import "./App.css";
 import { db } from "../../firebase";
-import { collection, getDocs, addDoc, updateDoc, doc } from "firebase/firestore";
+import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from "firebase/firestore";
 
 
 export const TeacherDirectory = () => {
     const [teacherFirstName, setTeacherFirstName] = useState("");
     const [teacherLastName, setTeacherLastName] = useState("");
     const [teacherSubject, setTeacherSubject] = useState("");
-
+    const [message, setMessage] = useState("");
 
     const [teachers, setTeachers] = useState([]);
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!teacherFirstName || !teacherLastName || !teacherSubject) {
+            setMessage("You must fill out all fields.");
+            return;
+        }
+
         try {
             const docRef = await addDoc(collection(db, "teachers"), {
-                id: 123456,
+                //id: 123456,
                 email: `${teacherFirstName.toLowerCase()}${teacherLastName.toLowerCase()}@jefferson.edu`,
                 firstName: teacherFirstName,
                 lastName: teacherLastName,
                 subject: teacherSubject
             });
             console.log("Created doc with ID: ", docRef.id);
+            setMessage(`Teacher ${teacherFirstName} ${teacherLastName} added successfully.`);
             setTeacherFirstName("");
             setTeacherLastName("");
             setTeacherSubject("");
@@ -51,6 +58,15 @@ export const TeacherDirectory = () => {
         }
     };
 
+    const handleDelete = async (id) => {
+        try {
+            await deleteDoc(doc(db, "teachers", id));
+            fetchTeachers();
+            console.log(`Deleted document with ID: ${id}`);
+        } catch (error) {
+            console.error("Error deleting document: ", error);
+        }
+    };
 
     useEffect(() => {
         fetchTeachers();
@@ -60,6 +76,7 @@ export const TeacherDirectory = () => {
     return (
         <div>
             <h1>Teacher Directory</h1>
+            {<p>{message}</p>}
             <form onSubmit={handleSubmit}>
                 
                 <div>
@@ -110,6 +127,9 @@ export const TeacherDirectory = () => {
                             <td>{teacher.firstName + " " + teacher.lastName}</td>
                             <td>{teacher.subject}</td>
                             <td>{teacher.email}</td>
+                            <td>
+                                <button onClick={() => handleDelete(teacher.id)}>Delete</button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
