@@ -1,21 +1,3 @@
-// import React from "react";
-// import logo from "../assets/logo.jpg"; 
-// import student from "../assets/student.jpg";
-// import teacher from "../assets/teacher.jpg";
-// import grades from "../assets/grades.jpg";
-// import course from "../assets/course.jpg";
-// import calendar from "../assets/calendar.jpg";
-// import "./Root.css";
-
-
-// export const Root = () => {
-//   return (
-//     <div className="root-container">
-//       <img src={logo} alt="Logo" className="logo" />
-//     </div>
-//   );
-// };
-
 import React, { useState } from "react";
 import "./Root.css";
 import logo from "../assets/logo.jpg";
