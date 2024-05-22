@@ -12,13 +12,19 @@ export const TeacherDirectory = () => {
     const [teacherFirstName, setTeacherFirstName] = useState("");
     const [teacherLastName, setTeacherLastName] = useState("");
     const [teacherSubject, setTeacherSubject] = useState("");
-
+    const [message, setMessage] = useState("");
 
     const [teachers, setTeachers] = useState([]);
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!teacherFirstName || !teacherLastName || !teacherSubject) {
+            setMessage("You must fill out all fields.");
+            return;
+        }
+
         try {
             const docRef = await addDoc(collection(db, "teachers"), {
                 //id: 123456,
@@ -28,6 +34,7 @@ export const TeacherDirectory = () => {
                 subject: teacherSubject
             });
             console.log("Created doc with ID: ", docRef.id);
+            setMessage(`Teacher ${teacherFirstName} ${teacherLastName} added successfully.`);
             setTeacherFirstName("");
             setTeacherLastName("");
             setTeacherSubject("");
@@ -69,6 +76,7 @@ export const TeacherDirectory = () => {
     return (
         <div>
             <h1>Teacher Directory</h1>
+            {<p>{message}</p>}
             <form onSubmit={handleSubmit}>
                 
                 <div>
