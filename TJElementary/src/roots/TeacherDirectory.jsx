@@ -172,7 +172,7 @@ export const TeacherDirectory = () => {
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <Button variant="contained" color="primary" type="submit">
+                        <Button variant="contained" color="primary" type="submit" sx={{ backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }} }>
                             Add Teacher
                         </Button>
                     </Grid>
@@ -209,10 +209,10 @@ export const TeacherDirectory = () => {
                                             fullWidth
                                             margin="normal"
                                         />
-                                        <Button variant="contained" color="primary" onClick={() => handleSave(teacher.id)}>
+                                        <Button variant="contained" color="primary" onClick={() => handleSave(teacher.id)} sx={{ marginRight: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>
                                             Save
                                         </Button>
-                                        <Button variant="outlined" color="secondary" onClick={handleCancel}>
+                                        <Button variant="contained" color="primary" onClick={handleCancel} sx={{ marginRight: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>
                                             Cancel
                                         </Button>
                                     </>
@@ -225,10 +225,13 @@ export const TeacherDirectory = () => {
                                         variant="contained" 
                                         color="primary" 
                                         onClick={() => handleEdit(teacher)}
-                                        sx={{ marginRight: '10px' }}>
+                                        sx={{ marginRight: '10px',
+                                            backgroundColor: 'teal', 
+                                            '&:hover': { backgroundColor: '#008080' }
+                                         }}>
                                             Edit
                                         </Button>
-                                        <Button variant="contained" color="secondary" onClick={() => handleDelete(teacher.id)}>
+                                        <Button variant="contained" color="secondary" onClick={() => handleDelete(teacher.id)} sx={{ backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>
                                             Delete
                                         </Button>
                                     </>
