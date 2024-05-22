@@ -12,6 +12,7 @@ import { TeacherDirectory } from "./roots/TeacherDirectory.jsx";
 import { StudentDirectory } from "./roots/StudentDirectory.jsx";
 import { Grades } from "./roots/Grades.jsx";
 import { Dashboard } from "./roots/Dashboard.jsx";
+import { ClassPage } from "./roots/ClassPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -59,6 +60,14 @@ const router = createBrowserRouter([
         element: (
             <Layout>
                 <Dashboard />
+            </Layout>
+        ),
+    },
+    {
+        path: "/courseDashboard/:id",
+        element: (
+            <Layout>
+                <ClassPage />
             </Layout>
         ),
     },

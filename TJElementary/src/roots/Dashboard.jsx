@@ -7,7 +7,7 @@ export const Dashboard = () => {
     // have a section to filter the courses**
     const [courses, setCourses] = useState([]);
     const [total, setTotal] = useState(0);
-    const [error, setError] = useState(null);
+    //const [error, setError] = useState(null);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [code, setCode] = useState('');
@@ -59,31 +59,10 @@ export const Dashboard = () => {
             setTeacher('');
             setTitle('');
         } catch (error) {
-            setError(error.message);
             console.error("Error adding the course: ", error);
         }
         fetchCourses();
     };
-
-    //update operation
-    //allows administrators to update the existing class
-    const handleUpdate = async () => {
-        await updateDoc(doc(db, collectionName, ID), {
-        property: newValue
-      });
-    }
-
-    //delete operation
-    //allows administrators to delete an existing class
-    const handleDelete = async (evt) => {
-        evt.preventDefault();
-        try {
-            await deleteDoc(doc(db, "classes", ID))
-        } catch (error) {
-            setError(error.message);
-            console.error("Error deleting the course: ", error);
-        };
-    }
 
     return (
     <>
@@ -104,7 +83,7 @@ export const Dashboard = () => {
             <div>
                 {courses.map((course) => (
                     <section>
-                        <p>{course.Title} ({course['Course Code']}) by {course.Teacher}</p>
+                        <a href={`/courseDashboard/:${course.id}`}>{course.Title} ({course['Course Code']}) by {course.Teacher}</a>
                         <p>{course.Description}</p>
                         <p>{course['Current Enrollment']} out of {course['Max Enrollment']} currently enrolled</p>
                         <hr />
@@ -140,34 +119,6 @@ export const Dashboard = () => {
         </div>
     </section>
     <br></br>
-    <section>
-        <div className='updateEnrollment'>
-            <form onSubmit={handleUpdate}>
-                <fieldset>
-                    <legend> Update Enrollment For A Class </legend>
-                    <label>Course Code: <input type='text' id='codeRemove' value={code} 
-                    onChange={(evt) => setCode(evt.target.value)}>
-                    </input></label><br></br>
-                    <button type='submit'>Add Student(s)</button>
-                </fieldset>
-            </form>
-        </div>
-    </section>
-    <br></br>
-    <section>
-        <div className='removeCourse'>
-            <form onSubmit={handleDelete}>
-                <fieldset>
-                    <legend> Delete Course </legend>
-                    <p>Please note that this action is irreversible</p>
-                    <label>Course Code: <input type='text' id='codeRemove' value={code} 
-                    onChange={(evt) => setCode(evt.target.value)}>
-                    </input></label><br></br>
-                    <button type='submit'>Delete</button>
-                </fieldset>
-            </form>
-        </div>
-    </section>
     </>
     );
 };
