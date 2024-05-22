@@ -129,6 +129,12 @@ export const TeacherDirectory = () => {
                             fullWidth
                             margin="dense"
                             size="small"
+                            InputProps={{
+                                style: { backgroundColor: 'white', borderColor: 'orange' }
+                            }}
+                            InputLabelProps={{
+                                style: { color: 'orange' }
+                            }}
                         />
                     </Grid>
                     <Grid item xs={14} sm={6}>
@@ -140,6 +146,12 @@ export const TeacherDirectory = () => {
                             fullWidth
                             margin="dense"
                             size="small"
+                            InputProps={{
+                                style: { backgroundColor: 'white', borderColor: 'orange' }
+                            }}
+                            InputLabelProps={{
+                                style: { color: 'orange' }
+                            }}
                         />
                     </Grid>
                     <Grid item xs={14} sm={6}>
@@ -151,6 +163,12 @@ export const TeacherDirectory = () => {
                             fullWidth
                             margin="dense"
                             size="small"
+                            InputProps={{
+                                style: { backgroundColor: 'white', borderColor: 'orange' }
+                            }}
+                            InputLabelProps={{
+                                style: { color: 'orange' }
+                            }}
                         />
                     </Grid>
                     <Grid item xs={12}>
