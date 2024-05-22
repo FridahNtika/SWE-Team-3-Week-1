@@ -1,0 +1,68 @@
+/* Grades.css */
+
+.grades-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #5570a7;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: 'Lato', sans-serif;
+}
+
+.grades-title {
+    font-size: 2rem;
+    color: #1e2d5f;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.grades-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+}
+
+.grades-table th, .grades-table td {
+    padding: 1rem;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.grades-table th {
+    background-color: #1e2d5f;
+    color: white;
+}
+
+.grades-table tr:nth-child(even) {
+    background-color: #1e2d5f;
+}
+
+.edit-button, .update-button {
+    background-color: #00b2a9;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.edit-button:hover, .update-button:hover {
+    background-color: #007f7a;
+}
+
+.edit-grade-container {
+    text-align: center;
+}
+
+.edit-grade-container h3 {
+    margin-bottom: 1rem;
+}
+
+.edit-grade-container input {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
