@@ -4,7 +4,7 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
-    background-color: #5570a7;
+    background-color: #4d0000;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     font-family: 'Lato', sans-serif;
@@ -12,57 +12,101 @@
 
 .grades-title {
     font-size: 2rem;
-    color: #1e2d5f;
+    color: #003366;
     margin-bottom: 1rem;
     text-align: center;
 }
 
-.grades-table {
+.student-management {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.student-select-container, .new-assignment-container, .student-roster, .assignments-list {
     width: 100%;
-    border-collapse: collapse;
     margin-bottom: 2rem;
+    text-align: center;
 }
 
-.grades-table th, .grades-table td {
-    padding: 1rem;
-    border: 1px solid #ddd;
-    text-align: left;
+.student-select-container label, .new-assignment-container h3, .student-roster h3, .assignments-list h3 {
+    margin-bottom: 1rem;
+    font-weight: bold;
 }
 
-.grades-table th {
-    background-color: #1e2d5f;
-    color: white;
-}
-
-.grades-table tr:nth-child(even) {
-    background-color: #1e2d5f;
-}
-
-.edit-button, .update-button {
-    background-color: #00b2a9;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
+.student-select-container select, .new-assignment-container input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
     border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.edit-button:hover, .update-button:hover {
-    background-color: #007f7a;
+    margin-bottom: 1rem;
+    width: 100%;
+    max-width: 300px;
+    background-color: #f9f9f9;
+    color: #333;
 }
 
 .edit-grade-container {
     text-align: center;
+    margin-bottom: 2rem;
 }
 
 .edit-grade-container h3 {
     margin-bottom: 1rem;
 }
 
-.edit-grade-container input {
-    padding: 0.5rem;
-    border: 1px solid #ddd;
+
+.add-button, .update-button, .delete-button, .toggle-roster-button {
+    background-color: #007bff;
+    color: rgb(0, 3, 68);
+    border: none;
+    padding: 0.5rem 1rem;
     border-radius: 4px;
-    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 0.5rem;
+}
+
+.add-button:hover, .update-button:hover, .delete-button:hover, .toggle-roster-button:hover {
+    background-color: #0056b3;
+}
+
+.assignments-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.assignments-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.assignments-list li button {
+    margin-left: 1rem;
+}
+
+.student-roster {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.roster-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.roster-table th, .roster-table td {
+    padding: 1rem;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.roster-table th {
+    background-color: #003366;
+    color: white;
+}
+
+.roster-table tr:nth-child(even) {
+    background-color: #00206b;
 }
