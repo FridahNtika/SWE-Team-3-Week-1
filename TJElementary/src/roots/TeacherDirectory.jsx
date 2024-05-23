@@ -58,6 +58,7 @@ export const TeacherDirectory = () => {
             querySnapshot.forEach((doc) => {
                 teachersArray.push({ id: doc.id, ...doc.data() });
             });
+            teachersArray.sort((a, b) => a.lastName.localeCompare(b.lastName));
             setTeachers(teachersArray);
         } catch (error) {
             console.error("Error fetching teachers: ", error);
@@ -133,7 +134,7 @@ export const TeacherDirectory = () => {
                                 style: { backgroundColor: 'white', borderColor: 'orange' }
                             }}
                             InputLabelProps={{
-                                style: { color: 'orange' }
+                                style: { color: '#FF6B3B' }
                             }}
                         />
                     </Grid>
@@ -150,7 +151,7 @@ export const TeacherDirectory = () => {
                                 style: { backgroundColor: 'white', borderColor: 'orange' }
                             }}
                             InputLabelProps={{
-                                style: { color: 'orange' }
+                                style: { color: '#FF6B3B' }
                             }}
                         />
                     </Grid>
@@ -167,7 +168,7 @@ export const TeacherDirectory = () => {
                                 style: { backgroundColor: 'white', borderColor: 'orange' }
                             }}
                             InputLabelProps={{
-                                style: { color: 'orange' }
+                                style: { color: '#FF6B3B' }
                             }}
                         />
                     </Grid>

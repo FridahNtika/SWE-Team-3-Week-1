@@ -1,11 +1,21 @@
+/* App.css */
+:root {
+  --orange: #FF6B3B;
+  --teal: #00B2A9;
+  --navy-blue: #1E2D5F;
+  --white: #ffffff;
+  --black: #000000;
+  --gray: #888;
+}
+
 .navbar {
   width: 100%;
   position: fixed;
   top: 0;
   left: 0;
-  background-color: #650dad;
+  background-color: var(--navy-blue);
   overflow: hidden;
-  z-index: 1000; /* Ensure it is above other content */
+  z-index: 1000;
 }
 
 .navbar-list {
@@ -21,14 +31,22 @@
 }
 
 .navbar-item .active {
-  background-color: #ffffff; /* Highlight the active link */
+  background-color: var(--teal);
+  color: var(--white);
+  border-radius: 5px;
+  padding: 0px 2px; /* Increase padding for wider highlighting */
+
 }
 
 .navbar-item a {
-  color: black;
+  color: var(--white);
   text-align: center;
   text-decoration: none;
   display: block;
+}
+
+.navbar-item a:hover {
+  color: var(--orange);
 }
 
 #root {
@@ -36,6 +54,8 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  color: var(--white);
+  background-color: var(--navy-blue);
 }
 
 .logo {
@@ -45,10 +65,10 @@
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em var(--orange));
 }
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 2em var(--teal));
 }
 
 @keyframes logo-spin {
@@ -68,8 +88,11 @@
 
 .card {
   padding: 2em;
+  background-color: var(--navy-blue);
+  color: var(--white);
 }
 
 .read-the-docs {
-  color: #888;
+  color: var(--teal);
 }
+
