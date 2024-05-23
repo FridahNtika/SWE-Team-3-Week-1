@@ -7,7 +7,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Layout from "./Layout";
 import { Root } from "./roots/Root.jsx";
-//import { Calendar } from "./roots/Calendar.jsx";
+import { Calendar } from "./roots/Calendar.jsx";
 import { TeacherDirectory } from "./roots/TeacherDirectory.jsx";
 import { StudentDirectory } from "./roots/StudentDirectory.jsx";
 import { Grades } from "./roots/Grades.jsx";
