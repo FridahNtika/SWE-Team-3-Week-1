@@ -130,7 +130,7 @@ export const Grades = () => {
 
     return (
         <Container className="grades-container">
-            <Typography variant="h4" className="grades-title">Teacher Gradebook</Typography>
+            <h1>Student Gradebook</h1>
             <div className="student-management">
                 <div className="student-select-container">
                     <TextField
