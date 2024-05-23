@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { db } from "../../firebase";
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from "firebase/firestore";
 import './Grades.css';
+import { TextField, Button, Typography, Container, Grid, Card, CardContent } from "@mui/material";
 
 export const Grades = () => {
     const [students, setStudents] = useState([]);
@@ -128,58 +129,77 @@ export const Grades = () => {
     };
 
     return (
-        <div className="grades-container">
-            <h1 className="grades-title">Teacher Gradebook</h1>
+        <Container className="grades-container">
+            <Typography variant="h4" className="grades-title">Teacher Gradebook</Typography>
             <div className="student-management">
                 <div className="student-select-container">
-                    <label htmlFor="student-select">Select Student:</label>
-                    <select id="student-select" onChange={handleSelectStudent} value={selectedStudent?.id || ""}>
-                        <option value="" disabled>Select a student</option>
+                    <TextField
+                        select
+                        label="Select Student"
+                        value={selectedStudent?.id || ""}
+                        onChange={handleSelectStudent}
+                        SelectProps={{
+                            native: true,
+                        }}
+                        variant="outlined"
+                        fullWidth
+                    >
+                        <option value="" disabled></option>
                         {students.map((student) => (
                             <option key={student.id} value={student.id}>
                                 {student.firstName} {student.lastName}
                             </option>
                         ))}
-                    </select>
+                    </TextField>
                 </div>
                 {selectedStudent && (
                     <div className="edit-grade-container">
-                        <h3>Edit Final Grade for {selectedStudent.firstName} {selectedStudent.lastName}</h3>
-                        <input
+                        <Typography variant="h6">Edit Final Grade for {selectedStudent.firstName} {selectedStudent.lastName}</Typography>
+                        <TextField
                             type="text"
                             value={currentGrade}
                             onChange={(e) => setCurrentGrade(e.target.value)}
+                            variant="outlined"
+                            fullWidth
+                            margin="normal"
                         />
-                        <button className="update-button" onClick={updateGrade}>Update Final Grade</button>
+                        <Button variant="contained" color="primary" onClick={updateGrade} sx={{ marginTop: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>Update Final Grade</Button>
                     </div>
                 )}
                 <div className="new-assignment-container">
-                    <h3>Add New Assignment</h3>
-                    <input
+                    <Typography variant="h6">Add New Assignment</Typography>
+                    <TextField
                         type="text"
                         placeholder="Assignment Name"
                         value={newAssignment}
                         onChange={handleNewAssignmentChange}
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
                     />
-                    <button className="add-button" onClick={addAssignment}>Add Assignment</button>
+                    <Button variant="contained" color="primary" onClick={addAssignment} sx={{ marginTop: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>Add Assignment</Button>
                 </div>
                 <div className="assignments-list">
-                    <h3>Assignments</h3>
-                    <ul>
+                    <Typography variant="h6">Assignments</Typography>
+                    <Grid container spacing={2}>
                         {assignments.map((assignment) => (
-                            <li key={assignment.id}>
-                                {assignment.name}
-                                <button className="delete-button" onClick={() => deleteAssignment(assignment.id)}>Delete</button>
-                            </li>
+                            <Grid item key={assignment.id}>
+                                <Card>
+                                    <CardContent>
+                                        <Typography variant="body1">{assignment.name}</Typography>
+                                        <Button className="delete-button" onClick={() => deleteAssignment(assignment.id)} sx={{ marginTop: '10px', backgroundColor: 'white', '&:hover': { backgroundColor: '#FF6852' }}}>Delete</Button>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
                         ))}
-                    </ul>
+                    </Grid>
                 </div>
-                <button className="toggle-roster-button" onClick={toggleFullRoster}>
+                <Button className="toggle-roster-button" onClick={toggleFullRoster} sx={{ marginTop: '20px', backgroundColor: 'navy', color: 'white', '&:hover': { backgroundColor: '#000080' }}}>
                     {showFullRoster ? "Hide Full Roster" : "Show Full Roster"}
-                </button>
+                </Button>
                 {showFullRoster && (
                     <div className="student-roster">
-                        <h3>Student Roster</h3>
+                        <Typography variant="h6">Student Roster</Typography>
                         <table className="roster-table">
                             <thead>
                                 <tr>
@@ -196,11 +216,14 @@ export const Grades = () => {
                                         <td>{student.firstName} {student.lastName}</td>
                                         {assignments.map((assignment) => (
                                             <td key={assignment.id}>
-                                                <input
+                                                <TextField
                                                     type="text"
                                                     value={student.grades?.[assignment.id] || ""}
                                                     onChange={(e) => handleGradeChange(e, student.id, assignment.id)}
                                                     onBlur={() => updateAssignmentGrade(student.id, assignment.id, student.grades?.[assignment.id] || "")}
+                                                    variant="outlined"
+                                                    fullWidth
+                                                    margin="normal"
                                                 />
                                             </td>
                                         ))}
@@ -212,7 +235,7 @@ export const Grades = () => {
                     </div>
                 )}
             </div>
-        </div>
+        </Container>
     );
 };
 
