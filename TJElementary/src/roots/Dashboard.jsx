@@ -2,6 +2,8 @@ import React from 'react';
 import { useState, useEffect } from "react";
 import { db } from "../../firebase";
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from "firebase/firestore";
+import { TextField, Button, Card, CardContent, Typography, Container, Grid } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
 
 export const Dashboard = () => {
     // have a section to filter the courses**
@@ -12,7 +14,9 @@ export const Dashboard = () => {
     const [description, setDescription] = useState('');
     const [code, setCode] = useState('');
     const [teacher, setTeacher] = useState('');
+    const [meet, setMeet] = useState('');
     const [max, setMax] = useState(0);
+    const navigate = useNavigate();
 
     //read operation
     //gets all courses in the database and prints them out
@@ -50,7 +54,8 @@ export const Dashboard = () => {
                 Description: description,
                 'Course Code': code,
                 Teacher: teacher,
-                'Max Enrollment': max
+                'Max Enrollment': max,
+                'Meeting Times': meet
             });
             console.log(docRef);
             setCode('');
@@ -58,67 +63,169 @@ export const Dashboard = () => {
             setMax(0);
             setTeacher('');
             setTitle('');
+            setMeet('');
         } catch (error) {
             console.error("Error adding the course: ", error);
         }
         fetchCourses();
     };
 
+    const handleMore = async (courseID) => {
+        console.log(courseID);
+        navigate(`/courseDashboard/${courseID}`);
+    }
+
+    const handleDelete = async (id) => {
+        try {
+            await deleteDoc(doc(db, "classes", id));
+            fetchCourses();
+            console.log(`Deleted document with ID: ${id}`);
+        } catch (error) {
+            console.error("Error deleting course: ", error);
+        }
+    };
+
+
     return (
-    <>
-    <section>
-        <div className='header'>
-            <a class="school-title" href="/"> Thomas Jefferson Elementary</a><br></br>
-            <a class="courses" href="/courseDashboard"> Course Browser</a>
-        </div>
-        <hr />
-        <div id="courseListing">
-            <div>
-                Listing for: 
-                <b> Fall 2024</b>
-                ; Total courses offered: 
-                <b> {total} </b>
-                <hr />
-            </div>
-            <div>
-                {courses.map((course) => (
-                    <section>
-                        <a href={`/courseDashboard/:${course.id}`}>{course.Title} ({course['Course Code']}) by {course.Teacher}</a>
-                        <p>{course.Description}</p>
-                        <p>{course['Current Enrollment']} out of {course['Max Enrollment']} currently enrolled</p>
-                        <hr />
-                    </section>
-                ))}
-            </div>
-        </div>
-    </section>
-    <br></br>
-    <section>
-        <div className='addCourse'>
-            <form onSubmit={handleSubmit}>
-                <fieldset>
-                    <legend> Add a new course </legend>
-                    <label>Course Name: <input type='text' id='courseName' value={title} 
-                    onChange={(evt) => setTitle(evt.target.value)}>
-                    </input></label><br></br>
-                    <label>Course Code: <input type='text' id='courseCode' value={code} 
-                    onChange={(evt) => setCode(evt.target.value)}>
-                    </input></label><br></br>
-                    <label>Course Description: <input type='text' id='courseDescription' value={description} 
-                    onChange={(evt) => setDescription(evt.target.value)}>
-                    </input></label><br></br>
-                    <label>Course Instructor: <input type='text' id='courseInstructor' value={teacher} 
-                    onChange={(evt) => setTeacher(evt.target.value)}>
-                    </input></label><br></br>
-                    <label>Course Maximum Enrollment: <input type='number' id='courseMax' value={max} 
-                    onChange={(evt) => setMax(evt.target.value)}>
-                    </input></label><br></br>
-                    <button type='submit'>Add</button>
+    <Container>
+        <h1>Course Browser</h1>
+        <Grid container spacing={2} marginTop={2}>
+            {courses.map((course) => (
+            <Grid item xs={12} sm={6} md={4} key={course.id}>
+                <Card>
+                    <CardContent>
+                        <>
+                        <Typography variant="h5">{course.Title} ({course['Course Code']})</Typography>
+                        <Typography variant="body2">Instructor: {course.Teacher}</Typography>
+                        <Typography variant="body2">Meets: {course['Meeting Times']}</Typography>
+                        <Button variant="contained" color="primary" onClick={() => handleMore(course.id)}
+                            sx={{ marginRight: '10px',
+                                backgroundColor: 'teal', 
+                                '&:hover': { backgroundColor: '#008080' }
+                                }}> More Info </Button>
+                        <Button variant="contained" color="secondary" onClick={() => handleDelete(course.id)} sx={{ backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>
+                            Delete </Button>
+                        </>
+                    </CardContent>
+                </Card>
+            </Grid>
+            ))}
+        </Grid>
+        <br></br>
+        <form onSubmit={handleSubmit}>
+            <fieldset>
+                <legend> Add a new course </legend>
+                <Grid container spacing={3}>
+                    <Grid item xs={14} sm={6}>
+                        <TextField
+                            label="Course Name"
+                            variant="outlined"
+                            value={title}
+                            onChange={(evt) => setTitle(evt.target.value)}
+                            fullWidth
+                            margin="dense"
+                            size="small"
+                            InputProps={{
+                                style: { backgroundColor: 'white', borderColor: 'orange' }
+                            }}
+                            InputLabelProps={{
+                                style: { color: 'orange' }
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={14} sm={6}>
+                        <TextField
+                            label="Course Code"
+                            variant="outlined"
+                            value={code}
+                            onChange={(evt) => setCode(evt.target.value)}
+                            fullWidth
+                            margin="dense"
+                            size="small"
+                            InputProps={{
+                                style: { backgroundColor: 'white', borderColor: 'orange' }
+                            }}
+                            InputLabelProps={{
+                                style: { color: 'orange' }
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={14} sm={6}>
+                        <TextField
+                            label="Course Description"
+                            variant="outlined"
+                            value={description}
+                            onChange={(evt) => setDescription(evt.target.value)}
+                            fullWidth
+                            margin="dense"
+                            size="small"
+                            InputProps={{
+                                style: { backgroundColor: 'white', borderColor: 'orange' }
+                            }}
+                            InputLabelProps={{
+                                style: { color: 'orange' }
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={14} sm={6}>
+                        <TextField
+                            label="Course Instructor"
+                            variant="outlined"
+                            value={teacher}
+                            onChange={(evt) => setTeacher(evt.target.value)}
+                            fullWidth
+                            margin="dense"
+                            size="small"
+                            InputProps={{
+                                style: { backgroundColor: 'white', borderColor: 'orange' }
+                            }}
+                            InputLabelProps={{
+                                style: { color: 'orange' }
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={14} sm={6}>
+                        <TextField
+                            label="Max Enrollment"
+                            variant="outlined"
+                            value={max}
+                            onChange={(evt) => setMax(evt.target.value)}
+                            fullWidth
+                            margin="dense"
+                            size="small"
+                            InputProps={{
+                                style: { backgroundColor: 'white', borderColor: 'orange' }
+                            }}
+                            InputLabelProps={{
+                                style: { color: 'orange' }
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={14} sm={6}>
+                        <TextField
+                            label="Meeting Times"
+                            variant="outlined"
+                            value={meet}
+                            onChange={(evt) => setMeet(evt.target.value)}
+                            fullWidth
+                            margin="dense"
+                            size="small"
+                            InputProps={{
+                                style: { backgroundColor: 'white', borderColor: 'orange' }
+                            }}
+                            InputLabelProps={{
+                                style: { color: 'orange' }
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Button variant="contained" color="primary" type="submit" sx={{ backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }} }>
+                            Add Course
+                        </Button>
+                    </Grid>
+                </Grid>
                 </fieldset>
             </form>
-        </div>
-    </section>
-    <br></br>
-    </>
+    </Container>
     );
 };
