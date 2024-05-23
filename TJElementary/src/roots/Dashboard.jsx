@@ -88,6 +88,7 @@ export const Dashboard = () => {
 
     return (
     <Container>
+        <h1>Course Browser</h1>
         <Grid container spacing={2} marginTop={2}>
             {courses.map((course) => (
             <Grid item xs={12} sm={6} md={4} key={course.id}>
