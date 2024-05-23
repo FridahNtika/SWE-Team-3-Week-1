@@ -44,19 +44,6 @@ export const ClassPage = () => {
             console.log("Error updating this course: ", error);
         }
     };
-
-    //delete operation
-    //allows administrators to delete an existing class
-    const handleDelete = async (evt) => {
-        evt.preventDefault();
-        try {
-            const docRef = await doc(db, "classes", properID);
-            await deleteDoc(docRef);
-        } catch (error) {
-            setError(error.message);
-            console.error("Error deleting the course: ", error);
-        };
-    };
         
     //incorporate student collection**
     return (
@@ -102,21 +89,7 @@ export const ClassPage = () => {
             </form>
         </div>
     </section>
-    <br></br>
-    <section>
-        <div className='removeCourse'>
-            <form onSubmit={handleDelete}>
-                <fieldset>
-                    <legend> Delete Course </legend>
-                    <p>Please note that this action is irreversible</p>
-                    <label>Course Code: <input type='text' id='codeRemove' value={code} 
-                    onChange={(evt) => setCode(evt.target.value)}>
-                    </input></label><br></br>
-                    <button type='submit'>Delete</button>
-                </fieldset>
-            </form>
-        </div>
-            </section>*/}
+    <br></br>*/}
             </>
     );
 };
