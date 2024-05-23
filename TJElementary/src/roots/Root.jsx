@@ -36,7 +36,7 @@ export const Root = () => {
     navigate(path);
   };
 
-	return (
+  return (
     <div className="root-container">
       <div className="slideshow">
         <img
@@ -56,6 +56,6 @@ export const Root = () => {
         </div>
       </div>
       <h2 className="welcome-text">Welcome to TJ Elementary School</h2>
-		</div>
-	);
+    </div>
+  );
 };
