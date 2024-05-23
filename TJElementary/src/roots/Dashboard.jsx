@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { db } from "../../firebase";
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from "firebase/firestore";
 import { TextField, Button, Card, CardContent, Typography, Container, Grid } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
 
 export const Dashboard = () => {
     // have a section to filter the courses**
@@ -13,7 +14,9 @@ export const Dashboard = () => {
     const [description, setDescription] = useState('');
     const [code, setCode] = useState('');
     const [teacher, setTeacher] = useState('');
+    const [meet, setMeet] = useState('');
     const [max, setMax] = useState(0);
+    const navigate = useNavigate();
 
     //read operation
     //gets all courses in the database and prints them out
@@ -51,7 +54,8 @@ export const Dashboard = () => {
                 Description: description,
                 'Course Code': code,
                 Teacher: teacher,
-                'Max Enrollment': max
+                'Max Enrollment': max,
+                'Meeting Times': meet
             });
             console.log(docRef);
             setCode('');
@@ -59,6 +63,7 @@ export const Dashboard = () => {
             setMax(0);
             setTeacher('');
             setTitle('');
+            setMeet('');
         } catch (error) {
             console.error("Error adding the course: ", error);
         }
@@ -67,7 +72,7 @@ export const Dashboard = () => {
 
     const handleMore = async (courseID) => {
         console.log(courseID);
-        <a href={`/courseDashboard/:${courseID}`}></a>
+        navigate(`/courseDashboard/${courseID}`);
     }
 
     const handleDelete = async (id) => {
@@ -91,7 +96,7 @@ export const Dashboard = () => {
                         <>
                         <Typography variant="h5">{course.Title} ({course['Course Code']})</Typography>
                         <Typography variant="body2">Instructor: {course.Teacher}</Typography>
-                        {/*<Typography variant="body2">Email: {teacher.email}</Typography>*/}
+                        <Typography variant="body2">Meets: {course['Meeting Times']}</Typography>
                         <Button variant="contained" color="primary" onClick={() => handleMore(course.id)}
                             sx={{ marginRight: '10px',
                                 backgroundColor: 'teal', 
@@ -146,6 +151,23 @@ export const Dashboard = () => {
                     </Grid>
                     <Grid item xs={14} sm={6}>
                         <TextField
+                            label="Course Description"
+                            variant="outlined"
+                            value={description}
+                            onChange={(evt) => setDescription(evt.target.value)}
+                            fullWidth
+                            margin="dense"
+                            size="small"
+                            InputProps={{
+                                style: { backgroundColor: 'white', borderColor: 'orange' }
+                            }}
+                            InputLabelProps={{
+                                style: { color: 'orange' }
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={14} sm={6}>
+                        <TextField
                             label="Course Instructor"
                             variant="outlined"
                             value={teacher}
@@ -165,8 +187,25 @@ export const Dashboard = () => {
                         <TextField
                             label="Max Enrollment"
                             variant="outlined"
-                            value=""
+                            value={max}
                             onChange={(evt) => setMax(evt.target.value)}
+                            fullWidth
+                            margin="dense"
+                            size="small"
+                            InputProps={{
+                                style: { backgroundColor: 'white', borderColor: 'orange' }
+                            }}
+                            InputLabelProps={{
+                                style: { color: 'orange' }
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={14} sm={6}>
+                        <TextField
+                            label="Meeting Times"
+                            variant="outlined"
+                            value={meet}
+                            onChange={(evt) => setMeet(evt.target.value)}
                             fullWidth
                             margin="dense"
                             size="small"
