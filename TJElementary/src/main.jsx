@@ -23,14 +23,14 @@ const router = createBrowserRouter([
             </Layout>
         ),
     },
-    /*{
+    {
         path: "/calendar",
         element: (
             <Layout>
                 <Calendar />
             </Layout>
         ),
-    },*/
+    },
     {
         path: "/teacherdirectory",
         element: (
