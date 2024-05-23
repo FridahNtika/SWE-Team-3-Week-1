@@ -58,6 +58,7 @@ export const TeacherDirectory = () => {
             querySnapshot.forEach((doc) => {
                 teachersArray.push({ id: doc.id, ...doc.data() });
             });
+            teachersArray.sort((a, b) => a.lastName.localeCompare(b.lastName));
             setTeachers(teachersArray);
         } catch (error) {
             console.error("Error fetching teachers: ", error);

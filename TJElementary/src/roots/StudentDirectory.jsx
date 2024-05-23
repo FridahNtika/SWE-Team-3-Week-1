@@ -18,6 +18,7 @@ export const StudentDirectory = () => {
         try {
             const querySnapshot = await getDocs(collection(db, "students"));
             const studentsArray = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            studentsArray.sort((a, b) => a.lastName.localeCompare(b.lastName));
             setStudents(studentsArray);
         } catch (error) {
             console.error("Error fetching students: ", error);
