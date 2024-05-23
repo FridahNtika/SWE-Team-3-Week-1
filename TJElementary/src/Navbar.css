@@ -1,0 +1,38 @@
+.navbar {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 1rem;
+  }
+  
+  .navbar-logo {
+    height: 50px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar-logo img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+  }
+  
+  .navbar-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .navbar-item {
+    margin: 0 1rem;
+  }
