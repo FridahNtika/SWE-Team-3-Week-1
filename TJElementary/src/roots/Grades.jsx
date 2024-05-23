@@ -9,6 +9,7 @@ export const Grades = () => {
     const [assignments, setAssignments] = useState([]);
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [currentGrade, setCurrentGrade] = useState("");
+    const [newStudent, setNewStudent] = useState({ firstName: "", lastName: "", grades: {} });
     const [newAssignment, setNewAssignment] = useState("");
     const [showFullRoster, setShowFullRoster] = useState(false);
 
@@ -124,13 +125,37 @@ export const Grades = () => {
         }
     };
 
+    const handleNewStudentChange = (event) => {
+        const { name, value } = event.target;
+        setNewStudent({ ...newStudent, [name]: value });
+    };
+
+    const addStudent = async () => {
+        try {
+            await addDoc(collection(db, "students"), { ...newStudent, grade: calculateOverallGrade(newStudent.grades) });
+            setNewStudent({ firstName: "", lastName: "", grades: {} });
+            fetchStudents();
+        } catch (error) {
+            console.error("Error adding new student: ", error);
+        }
+    };
+
+    const deleteStudent = async (studentId) => {
+        try {
+            await deleteDoc(doc(db, "students", studentId));
+            fetchStudents();
+        } catch (error) {
+            console.error("Error deleting student: ", error);
+        }
+    };
+
     const toggleFullRoster = () => {
         setShowFullRoster(!showFullRoster);
     };
 
     return (
         <Container className="grades-container">
-            <Typography variant="h4" className="grades-title">Teacher Gradebook</Typography>
+            <h1>Teacher Gradebook</h1>
             <div className="student-management">
                 <div className="student-select-container">
                     <TextField
@@ -179,6 +204,30 @@ export const Grades = () => {
                     />
                     <Button variant="contained" color="primary" onClick={addAssignment} sx={{ marginTop: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>Add Assignment</Button>
                 </div>
+                <div className="new-student-container">
+                    <Typography variant="h6">Add New Student</Typography>
+                    <TextField
+                        type="text"
+                        label="First Name"
+                        name="firstName"
+                        value={newStudent.firstName}
+                        onChange={handleNewStudentChange}
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        type="text"
+                        label="Last Name"
+                        name="lastName"
+                        value={newStudent.lastName}
+                        onChange={handleNewStudentChange}
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                    />
+                    <Button variant="contained" color="primary" onClick={addStudent} sx={{ marginTop: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>Add Student</Button>
+                </div>
                 <div className="assignments-list">
                     <Typography variant="h6">Assignments</Typography>
                     <Grid container spacing={2}>
@@ -187,14 +236,14 @@ export const Grades = () => {
                                 <Card>
                                     <CardContent>
                                         <Typography variant="body1">{assignment.name}</Typography>
-                                        <Button className="delete-button" onClick={() => deleteAssignment(assignment.id)} sx={{ marginTop: '10px', backgroundColor: 'white', '&:hover': { backgroundColor: '#FF6852' }}}>Delete</Button>
+                                        <Button className="delete-button" onClick={() => deleteAssignment(assignment.id)} sx={{ marginTop: '10px', backgroundColor: 'red', '&:hover': { backgroundColor: '#cc0000' }}}>Delete</Button>
                                     </CardContent>
                                 </Card>
                             </Grid>
                         ))}
                     </Grid>
                 </div>
-                <Button className="toggle-roster-button" onClick={toggleFullRoster} sx={{ marginTop: '20px', backgroundColor: 'navy', color: 'white', '&:hover': { backgroundColor: '#000080' }}}>
+                <Button className="toggle-roster-button" onClick={toggleFullRoster} sx={{ marginTop: 'px', backgroundColor: 'teal', color: 'white', '&:hover': { backgroundColor: '#000080' }}}>
                     {showFullRoster ? "Hide Full Roster" : "Show Full Roster"}
                 </Button>
                 {showFullRoster && (
@@ -208,6 +257,7 @@ export const Grades = () => {
                                         <th key={assignment.id}>{assignment.name}</th>
                                     ))}
                                     <th>Overall Grade</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -228,6 +278,9 @@ export const Grades = () => {
                                             </td>
                                         ))}
                                         <td>{student.grade || "N/A"}</td>
+                                        <td>
+                                            <Button className="delete-button" onClick={() => deleteStudent(student.id)} sx={{ backgroundColor: 'teal', color: 'white', '&:hover': { backgroundColor: '#cc0000' }}}>Delete</Button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>

@@ -5,11 +5,15 @@ import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import { Modal } from "@mui/material";
-import { Box } from "@mui/material";
-import { Typography } from "@mui/material";
+import { Modal, Box, Typography, Grid, Button } from "@mui/material";
 import { db } from "/firebase";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import {
+    addDoc,
+    collection,
+    getDocs,
+    doc,
+    deleteDoc,
+} from "firebase/firestore";
 
 const style = {
     position: "absolute",
@@ -23,8 +27,20 @@ const style = {
     p: 4,
 };
 
-const getEevents = async () => {
-    {
+const handleDelete = async (id, setEvents) => {
+    try {
+        const eventDoc = doc(db, "events", id);
+        await deleteDoc(eventDoc);
+        setEvents((prevEvents) =>
+            prevEvents.filter((event) => event.id !== id)
+        );
+    } catch (error) {
+        console.error("Error deleting document: ", error);
+    }
+};
+
+const getAllEvents = async (setEvents) => {
+    try {
         let temp = [];
         const querySnapshot = await getDocs(collection(db, "events"));
         querySnapshot.forEach((doc) => {
@@ -33,33 +49,38 @@ const getEevents = async () => {
                 ...doc.data(),
             });
         });
-        setAllData(temp);
+        setEvents(temp);
+    } catch (error) {
+        console.error("Error getting documents: ", error);
     }
-
-    useEffect(() => {
-        fetchData();
-    }, []);
 };
-
-function getEventsForDate() {
-    setEventsForDay(
-        allData.filter(
-            (event) =>
-                event.year == year && event.month == month && event.day == day
-        )
-    );
-}
 
 export const Calendar = () => {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const [year, setYear] = React.useState("");
-    const [month, setMonth] = React.useState("");
-    const [day, setDay] = React.useState("");
-    const [allData, setAllData] = React.useState([]);
+    const [events, setEvents] = React.useState([]);
     const [eventsForDay, setEventsForDay] = React.useState([]);
     const [value, setValue] = React.useState(dayjs());
+
+    React.useEffect(() => {
+        getAllEvents(setEvents);
+    }, []);
+
+    React.useEffect(() => {
+        const selectedDate = value;
+        const selectedYear = selectedDate.year();
+        const selectedMonth = selectedDate.month() + 1; 
+
+        const filteredEvents = events.filter(
+            (event) =>
+                event.year === selectedYear &&
+                event.month === selectedMonth &&
+                event.day === selectedDay
+        );
+
+        setEventsForDay(filteredEvents);
+    }, [value, events]);
 
     return (
         <>
@@ -82,23 +103,60 @@ export const Calendar = () => {
                                     id="modal-modal-title"
                                     variant="h6"
                                     component="h2"
+                                    color="black"
                                 >
-                                    Text in a modal
+                                    Events for {value.month() + 1}/
+                                    {value.date()}/{value.year()} at TJ
+                                    Elementary
                                 </Typography>
                                 <Typography
                                     id="modal-modal-description"
                                     sx={{ mt: 2 }}
                                     color="black"
                                 >
-                                    Events for {value.month()}/{value.day()}/
-                                    {value.year()} at TJ Elementary
-                                    {eventsForDay}
+                                    {eventsForDay.length > 0 ? (
+                                        eventsForDay.map((event) => (
+                                            <div key={event.id}>
+                                                <Typography>
+                                                    {event.title}:{" "}
+                                                    {event.description}
+                                                </Typography>
+                                                <Button
+                                                    onClick={() =>
+                                                        handleDelete(
+                                                            event.id,
+                                                            setEvents
+                                                        )
+                                                    }
+                                                >
+                                                    Delete
+                                                </Button>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <Typography>
+                                            No events for this day.
+                                        </Typography>
+                                    )}
                                 </Typography>
                             </Box>
                         </Modal>
                     </DemoItem>
                 </DemoContainer>
             </LocalizationProvider>
+            <Grid item xs={12}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                    sx={{
+                        backgroundColor: "teal",
+                        "&:hover": { backgroundColor: "#008080" },
+                    }}
+                >
+                    Add Event
+                </Button>
+            </Grid>
         </>
     );
 };

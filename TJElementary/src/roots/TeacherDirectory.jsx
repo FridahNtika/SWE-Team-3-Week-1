@@ -154,6 +154,7 @@ export const TeacherDirectory = () => {
                     </Grid>
                     <Grid item xs={14} sm={6}>
                         <FormControl fullWidth margin="dense" size="small">
+
                             <InputLabel shrink={Boolean(teacherSubject)} style={{ color: '#FF6B3B' }}>Subject</InputLabel>
                             <Select
                                 value={teacherSubject}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Root.css";
 import logo from "../assets/logo.jpg";
@@ -11,6 +11,7 @@ import calendar from "../assets/calendar.jpg";
 export const Root = () => {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const images = [
     { src: logo, description: "TJ Elementary School Logo. Click here to return to the main dashboard.", path: "/" },
     { src: student, description: "Student Information and Enrollment. View and manage student profiles, including personal details and class enrollments. Enroll new students or update existing student records. Click here to navigate to Student Directory", path: "/studentDirectory" },
@@ -21,20 +22,36 @@ export const Root = () => {
   ];
 
   const handlePrevImage = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1
-    );
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === 0 ? images.length - 1 : prevIndex - 1
+      );
+      setIsTransitioning(false);
+    }, 500);
   };
 
   const handleNextImage = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === images.length - 1 ? 0 : prevIndex + 1
-    );
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      );
+      setIsTransitioning(false);
+    }, 500);
   };
 
   const handleImageClick = (path) => {
     navigate(path);
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleNextImage();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="root-container">
@@ -42,7 +59,7 @@ export const Root = () => {
         <img
           src={images[currentIndex].src}
           alt="Slideshow"
-          className="slideshow-image"
+          className={`slideshow-image ${isTransitioning ? "transitioning" : ""}`}
           onClick={() => handleImageClick(images[currentIndex].path)}
         />
         <div className="image-description">
@@ -55,7 +72,10 @@ export const Root = () => {
           &gt;
         </div>
       </div>
-      <h2 className="welcome-text">Welcome to TJ Elementary School</h2>
+      <div className="welcome-text">
+        <span>Welcome to TJ Elementary School </span>
+        <span>Welcome to TJ Elementary School </span>
+      </div>
     </div>
   );
 };

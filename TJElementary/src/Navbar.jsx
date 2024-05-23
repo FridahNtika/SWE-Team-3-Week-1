@@ -1,9 +1,16 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import logo from './assets/tj.jpg';
+import './Navbar.css';
 
 const Navbar = () => {
     return (
         <nav className="navbar">
+            {/* Add the logo */}
+            <div className="navbar-logo">
+                <img src={logo} alt="Logo" />
+            </div>
+
             <ul className="navbar-list">
                 <li className="navbar-item">
                     <NavLink to="/" exact activeClassName="active">

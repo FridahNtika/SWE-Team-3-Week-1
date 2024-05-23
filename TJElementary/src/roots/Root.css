@@ -1,87 +1,99 @@
 .root-container {
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.slideshow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.slideshow-image {
+  max-width: 80vw;
+  max-height: 80vh;
+  transition: opacity 0.5s ease-in-out;
+  opacity: 1;
+}
+
+.image-description {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 1rem;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.slideshow-image:hover + .image-description {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.arrow {
+  position: absolute;
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0.5rem;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.arrow:hover {
+  background-color: #0056b3;
+}
+
+.left {
+  left: 1rem;
+}
+
+.right {
+  right: 1rem;
+}
+
+.welcome-text {
+  margin-top: 2rem;
+  font-size: 2rem;
+  text-align: center;
+  white-space: nowrap;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.welcome-text span {
+  display: inline-block;
+  padding-left: 100%;
+  animation: slideText 10s linear infinite;
+}
+
+@keyframes slideText {
+  0% {
+    transform: translateX(0);
   }
-  
-  .slideshow {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
+  100% {
+    transform: translateX(-100%);
   }
-  
-  .slideshow-image {
-    max-width: 80vw;
-    max-height: 80vh;
-    transition: filter 0.3s ease;
-  }
-  
-  .image-description {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: #fff;
-    padding: 1rem;
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
-    opacity: 0; 
-    pointer-events: none;
-  }
-  
-  .slideshow-image:hover + .image-description {
-    transform: translateY(0);
-    opacity: 1; 
-    pointer-events: auto; 
-  }
-  
-  .arrow {
-    position: absolute;
-    font-size: 2rem;
-    font-weight: bold;
-    cursor: pointer;
-    padding: 0.5rem;
-    background-color: #007bff;
-    color: #fff;
-    border-radius: 50%;
-    transition: background-color 0.3s ease;
-  }
-  
-  .arrow:hover {
-    background-color: #0056b3;
-  }
-  
-  .left {
-    left: 1rem;
-  }
-  
-  .right {
-    right: 1rem;
-  }
-  
-  .welcome-text {
-    margin-top: 2rem;
-    font-size: 2rem;
-    text-align: center;
-    animation: zoomInOut 1s ease-in-out infinite;
-  }
-  
-  @keyframes zoomInOut {
-    0% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.2);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
+}
+
+.slideshow-image.transitioning {
+  opacity: 0;
+}
