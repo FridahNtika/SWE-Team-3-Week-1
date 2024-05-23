@@ -185,7 +185,13 @@ export const TeacherDirectory = () => {
                 fullWidth
                 margin="dense"
                 size="small"
-                style={{ marginTop: '20px', marginBottom: '20px' }}
+                InputProps={{
+                    style: { backgroundColor: 'white', borderColor: 'orange' }
+                }}
+                InputLabelProps={{
+                    style: { color: '#FF6B3B' }
+                }}
+                sx={{ marginTop: '30px' }}
             />
             <Grid container spacing={2} marginTop={2}>
                 {filteredTeachers.map((teacher) => (
