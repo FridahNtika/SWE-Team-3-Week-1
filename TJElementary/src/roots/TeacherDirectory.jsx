@@ -1,25 +1,19 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
-
-import { useState, useEffect } from "react";
-// import "./App.css";
 import { db } from "../../firebase";
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from "firebase/firestore";
 import { TextField, Button, Card, CardContent, Typography, Container, Grid, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
-
 export const TeacherDirectory = () => {
     const [teacherFirstName, setTeacherFirstName] = useState("");
     const [teacherLastName, setTeacherLastName] = useState("");
-    const [teacherFullName, setTeacherFullName] = useState("");
     const [teacherSubject, setTeacherSubject] = useState("");
     const [message, setMessage] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
 
     const [teachers, setTeachers] = useState([]);
     const [editingId, setEditingId] = useState(null);
     const [editingTeacher, setEditingTeacher] = useState({});
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -31,13 +25,11 @@ export const TeacherDirectory = () => {
 
         try {
             const docRef = await addDoc(collection(db, "teachers"), {
-                //id: 123456,
                 email: `${teacherFirstName.toLowerCase()}${teacherLastName.toLowerCase()}@jefferson.edu`,
                 firstName: teacherFirstName,
                 lastName: teacherLastName,
                 subject: teacherSubject,
-                fullName: teacherFullName
-                
+                fullName: teacherFirstName + " " + teacherLastName
             });
             console.log("Created doc with ID: ", docRef.id);
             setMessage(`Teacher ${teacherFirstName} ${teacherLastName} added successfully.`);
@@ -49,7 +41,6 @@ export const TeacherDirectory = () => {
             console.error("Error adding document: ", error);
         }
     };
-
 
     const fetchTeachers = async () => {
         try {
@@ -109,14 +100,20 @@ export const TeacherDirectory = () => {
         setEditingTeacher({ ...editingTeacher, [name]: value });
     };
 
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
 
     useEffect(() => {
         fetchTeachers();
     }, []);
 
+    const filteredTeachers = teachers.filter(teacher =>
+    (teacher.firstName + " " + teacher.lastName).toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
-        <Container>
+        <Container sx={{ display: 'flex', flexDirection: 'column', width: '93vw'}}>
             <h1>Teacher Directory</h1>
             {<p>{message}</p>}
             <form onSubmit={handleSubmit}>
@@ -156,7 +153,8 @@ export const TeacherDirectory = () => {
                         />
                     </Grid>
                     <Grid item xs={14} sm={6}>
-                    <FormControl fullWidth margin="dense" size="small">
+                        <FormControl fullWidth margin="dense" size="small">
+
                             <InputLabel shrink={Boolean(teacherSubject)} style={{ color: '#FF6B3B' }}>Subject</InputLabel>
                             <Select
                                 value={teacherSubject}
@@ -173,14 +171,30 @@ export const TeacherDirectory = () => {
                         </FormControl>
                     </Grid>
                     <Grid item xs={12}>
-                        <Button variant="contained" color="primary" type="submit" sx={{ backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }} }>
+                        <Button variant="contained" color="primary" type="submit" sx={{ backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' } }}>
                             Add Teacher
                         </Button>
                     </Grid>
                 </Grid>
             </form>
+            <TextField
+                label="Search by name"
+                variant="outlined"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                fullWidth
+                margin="dense"
+                size="small"
+                InputProps={{
+                    style: { backgroundColor: 'white', borderColor: 'orange' }
+                }}
+                InputLabelProps={{
+                    style: { color: '#FF6B3B' }
+                }}
+                sx={{ marginTop: '30px' }}
+            />
             <Grid container spacing={2} marginTop={2}>
-                {teachers.map((teacher) => (
+                {filteredTeachers.map((teacher) => (
                     <Grid item xs={12} sm={6} md={4} key={teacher.id}>
                         <Card>
                             <CardContent>
@@ -202,18 +216,24 @@ export const TeacherDirectory = () => {
                                             fullWidth
                                             margin="normal"
                                         />
-                                        <TextField
-                                            label="Subject"
-                                            name="subject"
-                                            value={editingTeacher.subject}
-                                            onChange={handleChange}
-                                            fullWidth
-                                            margin="normal"
-                                        />
-                                        <Button variant="contained" color="primary" onClick={() => handleSave(teacher.id)} sx={{ marginRight: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>
+                                        <FormControl fullWidth margin="normal">
+                                            <InputLabel shrink={Boolean(editingTeacher.subject)}>Subject</InputLabel>
+                                            <Select
+                                                name="subject"
+                                                value={editingTeacher.subject}
+                                                onChange={handleChange}
+                                            >
+                                                <MenuItem value="Math">Math</MenuItem>
+                                                <MenuItem value="Science">Science</MenuItem>
+                                                <MenuItem value="Music">Music</MenuItem>
+                                                <MenuItem value="English">English</MenuItem>
+                                                <MenuItem value="Spanish">Spanish</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                        <Button variant="contained" color="primary" onClick={() => handleSave(teacher.id)} sx={{ marginRight: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' } }}>
                                             Save
                                         </Button>
-                                        <Button variant="contained" color="primary" onClick={handleCancel} sx={{ marginRight: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>
+                                        <Button variant="contained" color="primary" onClick={handleCancel} sx={{ marginRight: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' } }}>
                                             Cancel
                                         </Button>
                                     </>
@@ -222,17 +242,18 @@ export const TeacherDirectory = () => {
                                         <Typography variant="h5">{teacher.firstName} {teacher.lastName}</Typography>
                                         <Typography variant="body2">Subject: {teacher.subject}</Typography>
                                         <Typography variant="body2">Email: {teacher.email}</Typography>
-                                        <Button 
-                                        variant="contained" 
-                                        color="primary" 
-                                        onClick={() => handleEdit(teacher)}
-                                        sx={{ marginRight: '10px',
-                                            backgroundColor: 'teal', 
-                                            '&:hover': { backgroundColor: '#008080' }
-                                         }}>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={() => handleEdit(teacher)}
+                                            sx={{
+                                                marginRight: '10px',
+                                                backgroundColor: 'teal',
+                                                '&:hover': { backgroundColor: '#008080' }
+                                            }}>
                                             Edit
                                         </Button>
-                                        <Button variant="contained" color="secondary" onClick={() => handleDelete(teacher.id)} sx={{ backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>
+                                        <Button variant="contained" color="secondary" onClick={() => handleDelete(teacher.id)} sx={{ backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' } }}>
                                             Delete
                                         </Button>
                                     </>
