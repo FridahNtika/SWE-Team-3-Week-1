@@ -1,12 +1,13 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import { Modal, Box, Typography, Grid, Button } from "@mui/material";
-import { db } from "/firebase";
+import { Modal, Box, Typography, Grid, Button, TextField, Container } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { db } from "../../firebase";
 import {
     addDoc,
     collection,
@@ -15,82 +16,134 @@ import {
     deleteDoc,
 } from "firebase/firestore";
 
-const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-};
-
-const handleDelete = async (id, setEvents) => {
-    try {
-        const eventDoc = doc(db, "events", id);
-        await deleteDoc(eventDoc);
-        setEvents((prevEvents) =>
-            prevEvents.filter((event) => event.id !== id)
-        );
-    } catch (error) {
-        console.error("Error deleting document: ", error);
-    }
-};
-
-const getAllEvents = async (setEvents) => {
-    try {
-        let temp = [];
-        const querySnapshot = await getDocs(collection(db, "events"));
-        querySnapshot.forEach((doc) => {
-            temp.push({
-                id: doc.id,
-                ...doc.data(),
-            });
-        });
-        setEvents(temp);
-    } catch (error) {
-        console.error("Error getting documents: ", error);
-    }
-};
-
 export const Calendar = () => {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
     const [events, setEvents] = React.useState([]);
     const [eventsForDay, setEventsForDay] = React.useState([]);
     const [value, setValue] = React.useState(dayjs());
+    const [newDateValue, setNewDateValue] = React.useState(dayjs());
+    const [year, setYear] = React.useState(value.year());
+    const [month, setMonth] = React.useState(value.month() + 1);
+    const [day, setDay] = React.useState(value.date());
+
+    const [newDay, setNewDay] = React.useState("");
+    const [newMonth, setNewMonth] = React.useState("");
+    const [newYear, setNewYear] = React.useState("");
+    const [newTitle, setNewTitle] = React.useState("");
+    const [newDescription, setNewDescription] = React.useState("");
+
+    const [showModal, setShowModal] = React.useState(false);
+    const openModal = () => setShowModal(true);
+    const closeModal = () => setShowModal(false);
+
+    const style = {
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: 400,
+        bgcolor: "background.paper",
+        border: "2px solid #000",
+        boxShadow: 24,
+        p: 4,
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            const eventDoc = doc(db, "events", id);
+            await deleteDoc(eventDoc);
+            setEvents((prevEvents) =>
+                prevEvents.filter((event) => event.id !== id)
+            );
+        } catch (error) {
+            console.error("Error deleting document: ", error);
+        }
+    };
+
+    const getAllEvents = async () => {
+        try {
+            let temp = [];
+            const querySnapshot = await getDocs(collection(db, "events"));
+            querySnapshot.forEach((doc) => {
+                temp.push({
+                    id: doc.id,
+                    ...doc.data(),
+                });
+            });
+            setEvents(temp);
+        } catch (error) {
+            console.error("Error getting documents: ", error);
+        }
+    };
 
     React.useEffect(() => {
-        getAllEvents(setEvents);
+        getAllEvents();
     }, []);
 
     React.useEffect(() => {
-        const selectedDate = value;
-        const selectedYear = selectedDate.year();
-        const selectedMonth = selectedDate.month() + 1; 
-
+        setYear(value.year());
+        setMonth(value.month() + 1);
+        setDay(value.date());
         const filteredEvents = events.filter(
             (event) =>
-                event.year === selectedYear &&
-                event.month === selectedMonth &&
-                event.day === selectedDay
+                event.Year === value.year() &&
+                event.Month === value.month() + 1 &&
+                event.Day === value.date()
         );
 
         setEventsForDay(filteredEvents);
-    }, [value, events]);
+    }, [value]);
+
+    const handleDateChange = (newValue) => {
+        setValue(newValue);
+        setYear(newValue.year());
+        setMonth(newValue.month() + 1);
+        setDay(newValue.date());
+        handleOpen();
+    };
+        const handleNewDateChange = (newValue) => {
+            setNewDateValue(newValue);
+            setNewYear(newValue.year());
+            setNewMonth(newValue.month() + 1);
+            setNewDay(newValue.date());
+        };
+
+    
+    const addEvent = async () => {
+        try {
+            const docRef = await addDoc(collection(db, "events"), {
+                Month: newMonth,
+                Day: newDay,
+                Year: newYear,
+                Description: newDescription,
+                Title: newTitle,
+            });
+            console.log("Created doc with ID: ", docRef.id);
+            setMessage(
+                `Event ${newTitle} added successfully.`
+            );
+            getAllEvents();
+        } catch (error) {
+            console.error("Error adding document: ", error);
+        }
+    };
 
     return (
         <>
+            <h2 style={{ color: "#FF6B3B" }}> TJ Elementary Events Calendar</h2>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={["DateCalendar", "DateCalendar"]}>
-                    <DemoItem label="TJ Elementary Events Calendar">
+                <Container
+                    components={["DateCalendar", "DateCalendar"]}
+                    color="white"
+                >
+                    <DemoItem label="">
                         <DateCalendar
                             value={value}
-                            onChange={(newValue) => setValue(newValue)}
-                            onClick={handleOpen}
+                            onChange={handleDateChange}
+                            sx={{ color: "#FF6B3B" }}
                         />
                         <Modal
                             open={open}
@@ -103,30 +156,33 @@ export const Calendar = () => {
                                     id="modal-modal-title"
                                     variant="h6"
                                     component="h2"
-                                    color="black"
+                                    color="#FF6B3B"
                                 >
-                                    Events for {value.month() + 1}/
-                                    {value.date()}/{value.year()} at TJ
+                                    Events for {month}/{day}/{year} at TJ
                                     Elementary
                                 </Typography>
                                 <Typography
                                     id="modal-modal-description"
                                     sx={{ mt: 2 }}
-                                    color="black"
+                                    color="#FF6B3B"
                                 >
                                     {eventsForDay.length > 0 ? (
                                         eventsForDay.map((event) => (
                                             <div key={event.id}>
-                                                <Typography>
-                                                    {event.title}:{" "}
-                                                    {event.description}
+                                                <Typography color="#1E2D5F">
+                                                    {event.Title}
+                                                    <div></div>
+                                                    {event.Description}
                                                 </Typography>
                                                 <Button
+                                                    type="submit"
+                                                    sx={{
+                                                        color:"#FFFFFF",
+                                                        backgroundColor:
+                                                            "#1E2D5F",
+                                                    }}
                                                     onClick={() =>
-                                                        handleDelete(
-                                                            event.id,
-                                                            setEvents
-                                                        )
+                                                        handleDelete(event.id)
                                                     }
                                                 >
                                                     Delete
@@ -134,7 +190,7 @@ export const Calendar = () => {
                                             </div>
                                         ))
                                     ) : (
-                                        <Typography>
+                                        <Typography color="#FF6B3B">
                                             No events for this day.
                                         </Typography>
                                     )}
@@ -142,10 +198,11 @@ export const Calendar = () => {
                             </Box>
                         </Modal>
                     </DemoItem>
-                </DemoContainer>
+                </Container>
             </LocalizationProvider>
             <Grid item xs={12}>
                 <Button
+                    onClick={() => setShowModal(true)}
                     variant="contained"
                     color="primary"
                     type="submit"
@@ -156,6 +213,86 @@ export const Calendar = () => {
                 >
                     Add Event
                 </Button>
+                <Modal open={showModal} onClose={() => closeModal()}>
+                    <Box sx={style}>
+                        <Typography
+                            id="modal-modal-title"
+                            variant="h6"
+                            component="h2"
+                            color="black"
+                        ></Typography>
+                        <Typography
+                            id="modal-modal-description"
+                            sx={{ mt: 2 }}
+                            color="black"
+                        >
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DemoContainer components={["DatePicker"]}>
+                                    <DatePicker
+                                        label="Date of event"
+                                        color="#FF6B3B"
+                                        variant="outlined"
+                                        value={newDateValue}
+                                        onChange={handleNewDateChange}
+                                    />
+                                </DemoContainer>
+                            </LocalizationProvider>
+                            <form action="">
+                                <TextField
+                                    label="Event Title"
+                                    variant="outlined"
+                                    onChange={(e) =>
+                                        setNewTitle(e.target.value)
+                                    }
+                                    fullWidth
+                                    margin="dense"
+                                    size="small"
+                                    InputProps={{
+                                        style: {
+                                            backgroundColor: "white",
+                                            borderColor: "orange",
+                                        },
+                                    }}
+                                    InputLabelProps={{
+                                        style: { color: "#FF6B3B" },
+                                    }}
+                                />
+
+                                <TextField
+                                    label="Event Description"
+                                    variant="outlined"
+                                    onChange={(e) =>
+                                        setNewDescription(e.target.value)
+                                    }
+                                    fullWidth
+                                    margin="dense"
+                                    size="small"
+                                    InputProps={{
+                                        style: {
+                                            backgroundColor: "white",
+                                            borderColor: "orange",
+                                        },
+                                    }}
+                                    InputLabelProps={{
+                                        style: { color: "#FF6B3B" },
+                                    }}
+                                />
+                            </form>
+                            <Button
+                                onClick={() => addEvent()}
+                                variant="contained"
+                                color="primary"
+                                type="submit"
+                                sx={{
+                                    backgroundColor: "teal",
+                                    "&:hover": { backgroundColor: "#008080" },
+                                }}
+                            >
+                                Save Event
+                            </Button>
+                        </Typography>
+                    </Box>
+                </Modal>
             </Grid>
         </>
     );
