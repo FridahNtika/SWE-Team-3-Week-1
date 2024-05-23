@@ -20,7 +20,8 @@
   .slideshow-image {
     max-width: 80vw;
     max-height: 80vh;
-    transition: filter 0.3s ease;
+    transition: opacity 0.5s ease-in-out;
+    opacity: 1;
   }
   
   .image-description {
@@ -84,4 +85,8 @@
     100% {
       transform: scale(1);
     }
+  }
+  
+  .slideshow-image.transitioning {
+    opacity: 0;
   }
