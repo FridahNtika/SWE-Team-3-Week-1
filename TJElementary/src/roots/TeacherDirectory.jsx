@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 // import "./App.css";
 import { db } from "../../firebase";
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from "firebase/firestore";
-import { TextField, Button, Card, CardContent, Typography, Container, Grid } from "@mui/material";
+import { TextField, Button, Card, CardContent, Typography, Container, Grid, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
 
 export const TeacherDirectory = () => {
@@ -156,21 +156,21 @@ export const TeacherDirectory = () => {
                         />
                     </Grid>
                     <Grid item xs={14} sm={6}>
-                        <TextField
-                            label="Subject"
-                            variant="outlined"
-                            value={teacherSubject}
-                            onChange={(e) => setTeacherSubject(e.target.value)}
-                            fullWidth
-                            margin="dense"
-                            size="small"
-                            InputProps={{
-                                style: { backgroundColor: 'white', borderColor: 'orange' }
-                            }}
-                            InputLabelProps={{
-                                style: { color: '#FF6B3B' }
-                            }}
-                        />
+                    <FormControl fullWidth margin="dense" size="small">
+                            <InputLabel shrink={Boolean(teacherSubject)} style={{ color: '#FF6B3B' }}>Subject</InputLabel>
+                            <Select
+                                value={teacherSubject}
+                                onChange={(e) => setTeacherSubject(e.target.value)}
+                                label="Subject"
+                                style={{ backgroundColor: 'white' }}
+                            >
+                                <MenuItem value="Math">Math</MenuItem>
+                                <MenuItem value="Science">Science</MenuItem>
+                                <MenuItem value="Music">Music</MenuItem>
+                                <MenuItem value="English">English</MenuItem>
+                                <MenuItem value="Spanish">Spanish</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Grid>
                     <Grid item xs={12}>
                         <Button variant="contained" color="primary" type="submit" sx={{ backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }} }>
