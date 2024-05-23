@@ -13,21 +13,19 @@ export const ClassPage = () => {
     // Get the userId param from the URL.
     let { id } = useParams();
 
-    //console.log(properID);
-
     // Gets the course's data
     useEffect(() => {
         const fetchCourse = async (id) => {
             try {
                 const docRef = await getDoc(doc(db, "classes", id));
                 const data = docRef.data();
-                console.log("data: ", data);
                 setCourseInfo({ data });
                 //console.log(data);
-                console.log("CI: ", courseInfo);
                 const stud = []
-                data.Enrolled.forEach((student) => stud.push(student));
-                setStudents(stud);
+                if(data.Enrolled){
+                    data.Enrolled.forEach((student) => stud.push(student));
+                    setStudents(stud);
+                }
             } catch (error) {
                 console.log("Error fetching this course: ", error);     
             }
@@ -38,17 +36,30 @@ export const ClassPage = () => {
     
     }, []);
 
-    // Update operation
+    // TODO
+    //Update operation
     // Allows administrators to update the existing class
     const handleUpdate = async (evt) => {
         evt.preventDefault();
         try {
-            const docRef = await doc(db, "classes", properID);
+            const properID = id.replace(':','');
+            const docRef = await getDoc(doc(db, "classes", properID));
             const newD = docRef.data();
-            console.log(newD);
-            /*await updateDoc(docRef(db, "classes", properID), {
-                property: newValue
-              });*/
+            //console.log("BEFORE: ", newD);
+            const max = newD['Max Enrollment'];
+            //console.log(typeof newD['Enrolled']);
+            if (!newD['Enrolled']) {
+                await updateDoc(docRef, {
+                    Enrolled: [added]
+                })
+                console.log("AFTER: ", newD);
+            } else if (newD.Enrolled.length !== max) {
+                //console.log(docRef.data());
+                await updateDoc(docRef, {
+                    Enrolled: Enrolled.push(added)
+                })
+                console.log("AFTER: ", newD);
+            }
         } catch (error) {
             console.log("Error updating this course: ", error);
         }
@@ -72,47 +83,50 @@ export const ClassPage = () => {
                 {courseInfo ? (
                     <>
                     <h2>{courseInfo['data'].Title} ({courseInfo['data']['Course Code']})</h2>
-                    <p><strong>Meets on {courseInfo['data']['Meeting Times']}</strong></p>
-                    <p><i>{courseInfo['data'].Teacher}</i></p>
-                    <p>{courseInfo['data'].Description}</p>
-                    <h4>Students currently enrolled: </h4>
-                    <div className='studentList'>
-    
-                        {students && students.map((student, index) => (
-                        <Grid item xs={12} sm={6} md={4} key={index}>
-                            <Card>
-                                <CardContent>
-                                    <>
-                                    <Typography variant="h5">{student}</Typography>
-                                    <Button variant="contained" color="secondary" onClick={() => handleDelete(index)} 
-                                        sx={{ backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>
-                                        Remove </Button>
-                                    </>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                        ))}
-                    </div>
+                    <h4><strong>Meets on {courseInfo['data']['Meeting Times']}</strong></h4>
+                    <h4><i>{courseInfo['data'].Teacher}</i></h4>
+                    <h4>{courseInfo['data'].Description}</h4>
                     </> 
                 ) : (
-                    <p>Loading...</p>
+                    <Typography variant="h6">No course information available.</Typography>
                 )}
             </div>
         </Grid>
+        {students.length > 0 ? (
+            <>
+            <h3>Students currently enrolled: </h3>
+            <div className='studentList'>
+                <Grid container spacing={2}>
+                {students.map((student, index) => (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                    <Card sx={{ minWidth: 200, maxWidth: 300, margin: 'auto' }}>
+                        <CardContent>
+                            <>
+                            <Typography variant="h5">{student}</Typography>
+                            <Button variant="contained" color="secondary" onClick={() => handleDelete(index)} 
+                                sx={{ backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>
+                                Remove </Button>
+                            </>
+                        </CardContent>
+                    </Card>
+                </Grid>
+                ))}
+                </Grid>
+            </div>
+            </>
+        ) : (
+            <h3>No students currently enrolled</h3>
+        )}
+    
         <br></br>
         <form onSubmit={handleUpdate}>
             <fieldset>
                 <legend> Enroll a student </legend>
                 <Grid container spacing={2}>
                     <Grid item xs={8} sm={6}>
-                        <TextField
-                            label="Name"
-                            variant="outlined"
-                            value={added}
+                        <TextField label="Name" variant="outlined" value={added}
                             onChange={(evt) => setAdded(evt.target.value)}
-                            fullWidth
-                            margin="dense"
-                            size="small"
+                            fullWidth margin="dense" size="small"
                             InputProps={{
                                 style: { backgroundColor: 'white', borderColor: 'orange' }
                             }}

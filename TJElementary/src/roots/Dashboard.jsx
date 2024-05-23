@@ -55,7 +55,8 @@ export const Dashboard = () => {
                 'Course Code': code,
                 Teacher: teacher,
                 'Max Enrollment': max,
-                'Meeting Times': meet
+                'Meeting Times': meet,
+                Enrolled: []
             });
             console.log(docRef);
             setCode('');
