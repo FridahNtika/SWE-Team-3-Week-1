@@ -98,6 +98,7 @@ export const Dashboard = () => {
                         <Typography variant="h5">{course.Title} ({course['Course Code']})</Typography>
                         <Typography variant="body2">Instructor: {course.Teacher}</Typography>
                         <Typography variant="body2">Meets: {course['Meeting Times']}</Typography>
+                        <Typography variant="body2">Currently enrolled: {course['Current Enrollment']}/{course['Max Enrollment']}</Typography>
                         <Button variant="contained" color="primary" onClick={() => handleMore(course.id)}
                             sx={{ marginRight: '10px',
                                 backgroundColor: 'teal', 
