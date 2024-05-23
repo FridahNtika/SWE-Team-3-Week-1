@@ -1,42 +1,18 @@
 import React from 'react';
 import { useState, useEffect } from "react";
 import { db } from "../../firebase";
-import { collection, getDocs, addDoc, updateDoc, doc } from "firebase/firestore";
+import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from "firebase/firestore";
 
 export const Dashboard = () => {
     // have a section to filter the courses**
     const [courses, setCourses] = useState([]);
     const [total, setTotal] = useState(0);
-    const [error, setError] = useState(null);
+    //const [error, setError] = useState(null);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [code, setCode] = useState('');
     const [teacher, setTeacher] = useState('');
     const [max, setMax] = useState(0);
-
-    //create operation
-    //allows an administrator to add a new course
-    const handleSubmit = async (evt) => {
-        evt.preventDefault();
-        try {
-            const docRef = await addDoc(collection(db, "classes"), {
-                Title: title,
-                Description: description,
-                'Course Code': code,
-                Teacher: teacher,
-                'Max Enrollment': max
-            });
-            console.log(docRef);
-            setCode('');
-            setDescription('');
-            setMax(0);
-            setTeacher('');
-            setTitle('');
-        } catch (error) {
-            setError(error.message);
-            console.error("Error adding the course: ", error);
-        }
-    };
 
     //read operation
     //gets all courses in the database and prints them out
@@ -64,6 +40,30 @@ export const Dashboard = () => {
         fetchCourses();
     }, []);
 
+    //create operation
+    //allows an administrator to add a new course
+    const handleSubmit = async (evt) => {
+        evt.preventDefault();
+        try {
+            const docRef = await addDoc(collection(db, "classes"), {
+                Title: title,
+                Description: description,
+                'Course Code': code,
+                Teacher: teacher,
+                'Max Enrollment': max
+            });
+            console.log(docRef);
+            setCode('');
+            setDescription('');
+            setMax(0);
+            setTeacher('');
+            setTitle('');
+        } catch (error) {
+            console.error("Error adding the course: ", error);
+        }
+        fetchCourses();
+    };
+
     return (
     <>
     <section>
@@ -83,7 +83,7 @@ export const Dashboard = () => {
             <div>
                 {courses.map((course) => (
                     <section>
-                        <p>{course.Title} ({course['Course Code']}) by {course.Teacher}</p>
+                        <a href={`/courseDashboard/:${course.id}`}>{course.Title} ({course['Course Code']}) by {course.Teacher}</a>
                         <p>{course.Description}</p>
                         <p>{course['Current Enrollment']} out of {course['Max Enrollment']} currently enrolled</p>
                         <hr />
@@ -118,6 +118,7 @@ export const Dashboard = () => {
             </form>
         </div>
     </section>
+    <br></br>
     </>
     );
 };
