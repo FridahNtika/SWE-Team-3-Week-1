@@ -133,7 +133,7 @@ export const TeacherDirectory = () => {
                                 style: { backgroundColor: 'white', borderColor: 'orange' }
                             }}
                             InputLabelProps={{
-                                style: { color: 'orange' }
+                                style: { color: '#FF6B3B' }
                             }}
                         />
                     </Grid>
@@ -150,7 +150,7 @@ export const TeacherDirectory = () => {
                                 style: { backgroundColor: 'white', borderColor: 'orange' }
                             }}
                             InputLabelProps={{
-                                style: { color: 'orange' }
+                                style: { color: '#FF6B3B' }
                             }}
                         />
                     </Grid>
@@ -167,7 +167,7 @@ export const TeacherDirectory = () => {
                                 style: { backgroundColor: 'white', borderColor: 'orange' }
                             }}
                             InputLabelProps={{
-                                style: { color: 'orange' }
+                                style: { color: '#FF6B3B' }
                             }}
                         />
                     </Grid>
