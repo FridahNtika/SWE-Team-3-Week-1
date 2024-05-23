@@ -12,6 +12,8 @@ export const StudentDirectory = () => {
     const [editMode, setEditMode] = useState(false);
     const [editingStudent, setEditingStudent] = useState({});
     const [message, setMessage] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
+
 
 
     const fetchStudents = async () => {
@@ -117,6 +119,13 @@ export const StudentDirectory = () => {
         }));
     };
 
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+
+    const filteredStudents = students.filter(student =>
+        (student.firstName + " " + student.lastName).toLowerCase().includes(searchQuery.toLowerCase())
+        );
 
     useEffect(() => {
         fetchStudents();
@@ -124,7 +133,7 @@ export const StudentDirectory = () => {
 
 
     return (
-        <Container>
+        <Container sx={{width: '93vw'}}>
             <h1>Student Directory</h1>
             {<p>{message}</p>}
             <form onSubmit={handleSubmit}>
@@ -189,8 +198,24 @@ export const StudentDirectory = () => {
                     </Grid>
                 </Grid>
             </form>
+            <TextField
+                label="Search by name"
+                variant="outlined"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                fullWidth
+                margin="dense"
+                size="small"
+                InputProps={{
+                    style: { backgroundColor: 'white', borderColor: 'orange' }
+                }}
+                InputLabelProps={{
+                    style: { color: '#FF6B3B' }
+                }}
+                sx={{ marginTop: '30px' }}
+            />
             <Grid container spacing={2} marginTop={2}>
-                {students.map((student) => (
+                {filteredStudents.map((student) => (
                     <Grid item xs={12} sm={6} md={4} key={student.id}>
                         <Card>
                             <CardContent>

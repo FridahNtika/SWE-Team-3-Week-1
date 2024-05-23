@@ -7,7 +7,6 @@ import { TextField, Button, Card, CardContent, Typography, Container, Grid, Form
 export const TeacherDirectory = () => {
     const [teacherFirstName, setTeacherFirstName] = useState("");
     const [teacherLastName, setTeacherLastName] = useState("");
-    const [teacherFullName, setTeacherFullName] = useState("");
     const [teacherSubject, setTeacherSubject] = useState("");
     const [message, setMessage] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
@@ -30,7 +29,7 @@ export const TeacherDirectory = () => {
                 firstName: teacherFirstName,
                 lastName: teacherLastName,
                 subject: teacherSubject,
-                fullName: teacherFullName
+                fullName: teacherFirstName + " " + teacherLastName
             });
             console.log("Created doc with ID: ", docRef.id);
             setMessage(`Teacher ${teacherFirstName} ${teacherLastName} added successfully.`);
@@ -114,7 +113,7 @@ export const TeacherDirectory = () => {
     );
 
     return (
-        <Container>
+        <Container sx={{ display: 'flex', flexDirection: 'column', width: '93vw'}}>
             <h1>Teacher Directory</h1>
             {<p>{message}</p>}
             <form onSubmit={handleSubmit}>
