@@ -9,42 +9,57 @@ import { TextField, Button, Card, CardContent, Typography, Container, Grid } fro
 export const ClassPage = () => {
     const [courseInfo, setCourseInfo] = useState(null);
     const [students, setStudents] = useState([]);
+    const [added, setAdded] = useState("");
     // Get the userId param from the URL.
     let { id } = useParams();
-    const properID = id.replace(':','');
-    //console.log(properID);
 
     // Gets the course's data
     useEffect(() => {
-        const fetchCourse = async () => {
+        const fetchCourse = async (id) => {
             try {
-                const docRef = await getDoc(doc(db, "classes", properID));
+                const docRef = await getDoc(doc(db, "classes", id));
                 const data = docRef.data();
                 setCourseInfo({ data });
                 //console.log(data);
-                console.log("CI: ", courseInfo);
                 const stud = []
-                courseInfo['data'].Enrolled.forEach((student) => stud.push(student));
-                setStudents(stud);
+                if(data.Enrolled){
+                    data.Enrolled.forEach((student) => stud.push(student));
+                    setStudents(stud);
+                }
             } catch (error) {
                 console.log("Error fetching this course: ", error);     
             }
         };
 
-        if(properID) {
-            fetchCourse();
-        }
-    }, [properID]);
+        const properID = id.replace(':','');
+        fetchCourse(properID);
+    
+    }, []);
 
-    // Update operation
+    // TODO
+    //Update operation
     // Allows administrators to update the existing class
     const handleUpdate = async (evt) => {
         evt.preventDefault();
-        try {0
-            const docRef = await doc(db, "classes", properID);
-            await updateDoc(docRef(db, "classes", properID), {
-                property: newValue
-              });
+        try {
+            const properID = id.replace(':','');
+            const docRef = await getDoc(doc(db, "classes", properID));
+            const newD = docRef.data();
+            //console.log("BEFORE: ", newD);
+            const max = newD['Max Enrollment'];
+            //console.log(typeof newD['Enrolled']);
+            if (!newD['Enrolled']) {
+                await updateDoc(docRef, {
+                    Enrolled: [added]
+                })
+                console.log("AFTER: ", newD);
+            } else if (newD.Enrolled.length !== max) {
+                //console.log(docRef.data());
+                await updateDoc(docRef, {
+                    Enrolled: Enrolled.push(added)
+                })
+                console.log("AFTER: ", newD);
+            }
         } catch (error) {
             console.log("Error updating this course: ", error);
         }
@@ -62,69 +77,72 @@ export const ClassPage = () => {
         
     //incorporate student collection**
     return (
-        <>
-        {/*<Routes>
-        <Route path="/courseDashboard">
-            <Route path=":id" element={<Dashboard />} />
-            <Route path="me" element={...} />
-        </Route>
-        </Routes>*/}
-        <section>
-            <>
+    <Container>
+        <Grid container spacing={2} marginTop={2}>
             <div className='courseInfo'>
                 {courseInfo ? (
                     <>
                     <h2>{courseInfo['data'].Title} ({courseInfo['data']['Course Code']})</h2>
-                    <p><strong>Meets on {courseInfo['data']['Meeting Times']}</strong></p>
-                    <p><i>{courseInfo['data'].Teacher}</i></p>
-                    <p>{courseInfo['data'].Description}</p>
-                    <h4>Students currently enrolled: </h4>
-                    <Container>
-                        <Grid container spacing={2} marginTop={2}>
-                            <div className='studentList'>
-                                {students ? (
-                                    students.map((student, index) => (
-                                    <Grid item xs={12} sm={6} md={4} key={student.id}>
-                                        <Card>
-                                            <CardContent>
-                                                <>
-                                                <Typography variant="h5">{student}</Typography>
-                                                <Button variant="contained" color="secondary" onClick={() => handleDelete(index)} 
-                                                    sx={{ backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>
-                                                    Remove </Button>
-                                                </>
-                                            </CardContent>
-                                        </Card>
-                                    </Grid>
-                                    ))
-                                ) : (
-                                    <p>No students enrolled in this course</p>
-                                )} 
-                            </div>
-                        </Grid>
-                    </Container>
-                    </>
+                    <h4><strong>Meets on {courseInfo['data']['Meeting Times']}</strong></h4>
+                    <h4><i>{courseInfo['data'].Teacher}</i></h4>
+                    <h4>{courseInfo['data'].Description}</h4>
+                    </> 
                 ) : (
-                    <p>Loading...</p>
-                )
-                }
+                    <Typography variant="h6">No course information available.</Typography>
+                )}
+            </div>
+        </Grid>
+        {students.length > 0 ? (
+            <>
+            <h3>Students currently enrolled: </h3>
+            <div className='studentList'>
+                <Grid container spacing={2}>
+                {students.map((student, index) => (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                    <Card sx={{ minWidth: 200, maxWidth: 300, margin: 'auto' }}>
+                        <CardContent>
+                            <>
+                            <Typography variant="h5">{student}</Typography>
+                            <Button variant="contained" color="secondary" onClick={() => handleDelete(index)} 
+                                sx={{ backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>
+                                Remove </Button>
+                            </>
+                        </CardContent>
+                    </Card>
+                </Grid>
+                ))}
+                </Grid>
             </div>
             </>
-        </section>
-        {/*<section>
-        <div className='updateEnrollment'>
-            <form onSubmit={handleUpdate}>
-                <fieldset>
-                    <legend> Update Enrollment For This Class </legend>
-                    <label>Course Code: <input type='text' id='codeRemove' value={code} 
-                    onChange={(evt) => setCode(evt.target.value)}>
-                    </input></label><br></br>
-                    <button type='submit'>Add Student(s)</button>
+        ) : (
+            <h3>No students currently enrolled</h3>
+        )}
+    
+        <br></br>
+        <form onSubmit={handleUpdate}>
+            <fieldset>
+                <legend> Enroll a student </legend>
+                <Grid container spacing={2}>
+                    <Grid item xs={8} sm={6}>
+                        <TextField label="Name" variant="outlined" value={added}
+                            onChange={(evt) => setAdded(evt.target.value)}
+                            fullWidth margin="dense" size="small"
+                            InputProps={{
+                                style: { backgroundColor: 'white', borderColor: 'orange' }
+                            }}
+                            InputLabelProps={{
+                                style: { color: 'orange' }
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Button variant="contained" color="primary" type="submit" sx={{ backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }} }>
+                            Add Student
+                        </Button>
+                    </Grid>
+                </Grid>
                 </fieldset>
             </form>
-        </div>
-    </section>
-    <br></br>*/}
-            </>
-    );
+    </Container>
+    )
 };
