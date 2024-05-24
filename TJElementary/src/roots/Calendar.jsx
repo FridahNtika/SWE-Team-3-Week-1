@@ -138,7 +138,7 @@ export const Calendar = () => {
 
     return (
         <>
-            <h2 style={{ color: "#FF6B3B" }}> TJ Elementary Events Calendar</h2>
+            <h1 style={{ color: "#FF6B3B" }}> Events Calendar</h1>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Container
                     components={["DateCalendar", "DateCalendar"]}
