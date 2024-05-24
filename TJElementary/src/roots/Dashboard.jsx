@@ -97,6 +97,7 @@ export const Dashboard = () => {
     return (
     <Container>
         <h1>Course Browser</h1>
+        <p>Total Courses Offered: {total}</p>
         <div className='searchCourse'>
             <TextField
                 label="Search by name"
