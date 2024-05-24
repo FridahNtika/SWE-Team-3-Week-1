@@ -161,7 +161,7 @@ export const Grades = () => {
         <Container sx={{ display: 'flex', flexDirection: 'column', width: '93vw'}}>
             <h1>Teacher Gradebook</h1>
             <div className="student-management">
-                <Grid container spacing={3}>
+                
                     <Grid item xs={12} sm={6}>
                         <div className="new-student-container">
                             <Typography variant="h6">Select Student</Typography>
@@ -192,7 +192,7 @@ export const Grades = () => {
                             </TextField>
                         </div>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    
                         <div className="new-assignment-container">
                             <Typography variant="h6">Add New Assignment</Typography>
                             <TextField
@@ -214,8 +214,7 @@ export const Grades = () => {
 
                             <Button variant="contained" color="primary" onClick={addAssignment} sx={{ marginTop: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>Add Assignment</Button>
                         </div>
-                    </Grid>
-                </Grid>
+                
                 {selectedStudent && (
                     <div className="edit-grade-container">
                         <Typography variant="h6">Edit Final Grade for {selectedStudent.firstName} {selectedStudent.lastName}</Typography>
@@ -299,7 +298,7 @@ export const Grades = () => {
                 {showFullRoster && (
                     <div className="student-roster">
                         <Typography variant="h2">__________________________________</Typography>
-                        <Typography variant="h3">Student Roster</Typography>
+                        <Typography variant="h4">Full Student Roster & Grades</Typography>
                         <table className="roster-table">
                             <thead>
                                 <tr>

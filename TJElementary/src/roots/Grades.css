@@ -107,9 +107,11 @@
 }
 
 .roster-table th, .roster-table td {
-    padding: 1rem;
-    border: 1px solid #ddd;
+    border: 1px solid lightblue;
+    padding: 8px; 
     text-align: left;
+    line-height: 1.2; 
+    margin: 0; 
 }
 
 .roster-table th {
