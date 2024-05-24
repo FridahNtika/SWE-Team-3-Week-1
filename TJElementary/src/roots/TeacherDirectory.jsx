@@ -113,7 +113,7 @@ export const TeacherDirectory = () => {
     );
 
     return (
-        <Container sx={{ display: 'flex', flexDirection: 'column', width: '93vw'}}>
+        <Container sx={{ width: '93vw'}}>
             <h1>Teacher Directory</h1>
             {<p>{message}</p>}
             <form onSubmit={handleSubmit}>
