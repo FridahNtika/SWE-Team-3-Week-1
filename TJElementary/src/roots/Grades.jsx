@@ -90,16 +90,14 @@ export const Grades = () => {
         const { value } = event.target;
         const updatedStudents = students.map((student) => {
             if (student.id === studentId) {
+                const newGrades = {
+                    ...student.grades,
+                    [assignmentId]: value
+                };
                 return {
                     ...student,
-                    grades: {
-                        ...student.grades,
-                        [assignmentId]: value
-                    },
-                    grade: calculateOverallGrade({
-                        ...student.grades,
-                        [assignmentId]: value
-                    })
+                    grades: newGrades,
+                    grade: calculateOverallGrade(newGrades)
                 };
             }
             return student;
@@ -116,8 +114,14 @@ export const Grades = () => {
     const updateAssignmentGrade = async (studentId, assignmentId, grade) => {
         try {
             const studentDoc = doc(db, "students", studentId);
+            const gradeDoc = doc(db, "grades", `${studentId}_${assignmentId}`);
             await updateDoc(studentDoc, {
                 [`grades.${assignmentId}`]: grade
+            });
+            await updateDoc(gradeDoc, {
+                studentId,
+                assignmentId,
+                grade
             });
             fetchStudents();
         } catch (error) {
@@ -154,77 +158,123 @@ export const Grades = () => {
     };
 
     return (
-        <Container className="grades-container">
+        <Container sx={{ display: 'flex', flexDirection: 'column', width: '93vw'}}>
             <h1>Teacher Gradebook</h1>
             <div className="student-management">
-                <div className="student-select-container">
-                    <TextField
-                        select
-                        label="Select Student"
-                        value={selectedStudent?.id || ""}
-                        onChange={handleSelectStudent}
-                        SelectProps={{
-                            native: true,
-                        }}
-                        variant="outlined"
-                        fullWidth
-                    >
-                        <option value="" disabled></option>
-                        {students.map((student) => (
-                            <option key={student.id} value={student.id}>
-                                {student.firstName} {student.lastName}
-                            </option>
-                        ))}
-                    </TextField>
-                </div>
+                <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6}>
+                        <div className="new-student-container">
+                            <Typography variant="h6">Select Student</Typography>
+                            <TextField
+                                select
+                                label="Select Student"
+                                InputProps={{
+                                    style: { backgroundColor: 'white', borderColor: 'orange' }
+                                }}
+                                InputLabelProps={{
+                                    style: { color: '#FF6B3B' }
+                                }}
+                                size="small"
+                                value={selectedStudent?.id || ""}
+                                onChange={handleSelectStudent}
+                                SelectProps={{
+                                    native: true,
+                                }}
+                                variant="outlined"
+                                fullWidth
+                            >
+                                <option value="" disabled></option>
+                                {students.map((student) => (
+                                    <option key={student.id} value={student.id}>
+                                        {student.firstName} {student.lastName}
+                                    </option>
+                                ))}
+                            </TextField>
+                        </div>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <div className="new-assignment-container">
+                            <Typography variant="h6">Add New Assignment</Typography>
+                            <TextField
+                                type="text"
+                                label="Assignment Name"
+                                value={newAssignment}
+                                onChange={handleNewAssignmentChange}
+                                variant="outlined"
+                                size="small"
+                                fullWidth
+                                margin="normal"
+                                InputProps={{
+                                    style: { backgroundColor: 'white', borderColor: 'orange' }
+                                }}
+                                InputLabelProps={{
+                                    style: { color: '#FF6B3B' }
+                                }}
+                            />
+
+                            <Button variant="contained" color="primary" onClick={addAssignment} sx={{ marginTop: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>Add Assignment</Button>
+                        </div>
+                    </Grid>
+                </Grid>
                 {selectedStudent && (
                     <div className="edit-grade-container">
                         <Typography variant="h6">Edit Final Grade for {selectedStudent.firstName} {selectedStudent.lastName}</Typography>
                         <TextField
                             type="text"
+                            label="Edit Grade"
+                            name="editgrade"
+                            size="small"
                             value={currentGrade}
                             onChange={(e) => setCurrentGrade(e.target.value)}
                             variant="outlined"
                             fullWidth
                             margin="normal"
+                            InputProps={{
+                                style: { backgroundColor: 'white', borderColor: 'orange' }
+                            }}
+                            InputLabelProps={{
+                                style: { color: '#FF6B3B' }
+                            }}
                         />
+
                         <Button variant="contained" color="primary" onClick={updateGrade} sx={{ marginTop: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>Update Final Grade</Button>
                     </div>
                 )}
-                <div className="new-assignment-container">
-                    <Typography variant="h6">Add New Assignment</Typography>
-                    <TextField
-                        type="text"
-                        placeholder="Assignment Name"
-                        value={newAssignment}
-                        onChange={handleNewAssignmentChange}
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                    />
-                    <Button variant="contained" color="primary" onClick={addAssignment} sx={{ marginTop: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>Add Assignment</Button>
-                </div>
                 <div className="new-student-container">
                     <Typography variant="h6">Add New Student</Typography>
                     <TextField
                         type="text"
                         label="First Name"
                         name="firstName"
+                        size="small"
                         value={newStudent.firstName}
                         onChange={handleNewStudentChange}
                         variant="outlined"
                         fullWidth
                         margin="normal"
+                        InputProps={{
+                            style: { backgroundColor: 'white', borderColor: 'orange' }
+                        }}
+                        InputLabelProps={{
+                            style: { color: '#FF6B3B' }
+                        }}
                     />
                     <TextField
                         type="text"
                         label="Last Name"
                         name="lastName"
+                        size="small"
                         value={newStudent.lastName}
                         onChange={handleNewStudentChange}
                         variant="outlined"
                         fullWidth
                         margin="normal"
+                        InputProps={{
+                            style: { backgroundColor: 'white', borderColor: 'orange' }
+                        }}
+                        InputLabelProps={{
+                            style: { color: '#FF6B3B' }
+                        }}
                     />
                     <Button variant="contained" color="primary" onClick={addStudent} sx={{ marginTop: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>Add Student</Button>
                 </div>
@@ -236,19 +286,20 @@ export const Grades = () => {
                                 <Card>
                                     <CardContent>
                                         <Typography variant="body1">{assignment.name}</Typography>
-                                        <Button className="delete-button" onClick={() => deleteAssignment(assignment.id)} sx={{ marginTop: '10px', backgroundColor: 'red', '&:hover': { backgroundColor: '#cc0000' }}}>Delete</Button>
+                                        <Button className="delete-button" onClick={() => deleteAssignment(assignment.id)} sx={{ marginTop: '10px', backgroundColor: 'teal', color: 'white', '&:hover': { backgroundColor: '#cc0000' }}}>Delete</Button>
                                     </CardContent>
                                 </Card>
                             </Grid>
                         ))}
                     </Grid>
                 </div>
-                <Button className="toggle-roster-button" onClick={toggleFullRoster} sx={{ marginTop: 'px', backgroundColor: 'teal', color: 'white', '&:hover': { backgroundColor: '#000080' }}}>
+                <Button className="toggle-roster-button" onClick={toggleFullRoster} sx={{ marginTop: '20px', backgroundColor: 'teal', color: 'white', '&:hover': { backgroundColor: '#000080' }}}>
                     {showFullRoster ? "Hide Full Roster" : "Show Full Roster"}
                 </Button>
                 {showFullRoster && (
                     <div className="student-roster">
-                        <Typography variant="h6">Student Roster</Typography>
+                        <Typography variant="h2">__________________________________</Typography>
+                        <Typography variant="h3">Student Roster</Typography>
                         <table className="roster-table">
                             <thead>
                                 <tr>
@@ -268,12 +319,19 @@ export const Grades = () => {
                                             <td key={assignment.id}>
                                                 <TextField
                                                     type="text"
+                                                    size="small"
                                                     value={student.grades?.[assignment.id] || ""}
                                                     onChange={(e) => handleGradeChange(e, student.id, assignment.id)}
                                                     onBlur={() => updateAssignmentGrade(student.id, assignment.id, student.grades?.[assignment.id] || "")}
                                                     variant="outlined"
                                                     fullWidth
                                                     margin="normal"
+                                                    InputProps={{
+                                                        style: { backgroundColor: 'white', borderColor: 'orange' }
+                                                    }}
+                                                    InputLabelProps={{
+                                                        style: { color: '#FF6B3B' }
+                                                    }}
                                                 />
                                             </td>
                                         ))}
