@@ -134,11 +134,11 @@
 }
 
 .indicator-dot {
-  width: 10px;
-  height: 10px;
+  width: 15px; 
+  height: 15px; 
   border-radius: 50%;
   background-color: #bbb;
-  margin: 0 5px;
+  margin: 0 8px; 
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
