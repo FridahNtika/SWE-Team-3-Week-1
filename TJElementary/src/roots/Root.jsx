@@ -73,8 +73,8 @@ export const Root = () => {
         </div>
       </div>
       <div className="welcome-text">
-        <span>Welcome to TJ Elementary School </span>
-        <span>Welcome to TJ Elementary School </span>
+        <span>TJ Elementary School will be closed on May 27th in observance of Memorial Day. Classes will resume on May 29th. Wishing everyone a safe and enjoyable holiday! </span>
+        <span>TJ Elementary School will be closed on May 27th in observance of Memorial Day. Classes will resume on May 29th. Wishing everyone a safe and enjoyable holiday! </span>
       </div>
     </div>
   );
