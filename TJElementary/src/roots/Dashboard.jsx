@@ -9,13 +9,13 @@ export const Dashboard = () => {
     // have a section to filter the courses**
     const [courses, setCourses] = useState([]);
     const [total, setTotal] = useState(0);
-    //const [error, setError] = useState(null);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [code, setCode] = useState('');
     const [teacher, setTeacher] = useState('');
     const [meet, setMeet] = useState('');
     const [max, setMax] = useState(0);
+    const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
 
     //read operation
@@ -23,15 +23,9 @@ export const Dashboard = () => {
     const fetchCourses = async () => {
         try {
             const data = await getDocs(collection(db, "classes"));
-            let temp = [];
-            data.forEach((doc) => {
-                temp.push({ id: doc.id, ...doc.data() });
-            });
             let coursesArray = [];
-
-            temp.forEach((item) => {
-                coursesArray.push(item);
-            });
+            data.forEach((doc) => {coursesArray.push({ id: doc.id, ...doc.data() });});
+            coursesArray.sort((a, b) => a.Title.localeCompare(b.Title));
             const total = coursesArray.length;
             setTotal(total);
             setCourses(coursesArray);
@@ -86,12 +80,38 @@ export const Dashboard = () => {
         }
     };
 
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+
+    const filteredCourses = courses.filter(course =>
+        (course.Title).toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
     <Container>
         <h1>Course Browser</h1>
+        <p>Total Courses Offered: {total}</p>
+        <div className='searchCourse'>
+            <TextField
+                label="Search by name"
+                variant="outlined"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                fullWidth
+                margin="dense"
+                size="small"
+                InputProps={{
+                    style: { backgroundColor: 'white', borderColor: 'orange' }
+                }}
+                InputLabelProps={{
+                    style: { color: '#FF6B3B' }
+                }}
+                sx={{ marginTop: '30px' }}
+            />
+        </div>
         <Grid container spacing={2} marginTop={2}>
-            {courses.map((course) => (
+            {filteredCourses.map((course) => (
             <Grid item xs={12} sm={6} md={4} key={course.id}>
                 <Card>
                     <CardContent>

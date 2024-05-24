@@ -5,7 +5,15 @@ import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import { Modal, Box, Typography, Grid, Button, TextField, Container } from "@mui/material";
+import {
+    Modal,
+    Box,
+    Typography,
+    Grid,
+    Button,
+    TextField,
+    Container,
+} from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { db } from "../../firebase";
 import {
@@ -104,15 +112,30 @@ export const Calendar = () => {
         setDay(newValue.date());
         handleOpen();
     };
-        const handleNewDateChange = (newValue) => {
-            setNewDateValue(newValue);
-            setNewYear(newValue.year());
-            setNewMonth(newValue.month() + 1);
-            setNewDay(newValue.date());
-        };
+    const handleNewDateChange = (newValue) => {
+        setNewDateValue(newValue);
+        setNewYear(newValue.year());
+        setNewMonth(newValue.month() + 1);
+        setNewDay(newValue.date());
+    };
 
-    
-    const addEvent = async () => {
+const addEvent = async () => {
+    if (newMonth === "") {
+        try {
+            const docRef = await addDoc(collection(db, "events"), {
+                Month: month,
+                Day: day,
+                Year: year,
+                Description: newDescription,
+                Title: newTitle,
+            });
+            console.log("Created doc with ID: ", docRef.id);
+            setMessage(`Event ${newTitle} added successfully.`);
+            getAllEvents();
+        } catch (error) {
+            console.error("Error adding document: ", error);
+        }
+    } else {
         try {
             const docRef = await addDoc(collection(db, "events"), {
                 Month: newMonth,
@@ -122,18 +145,18 @@ export const Calendar = () => {
                 Title: newTitle,
             });
             console.log("Created doc with ID: ", docRef.id);
-            setMessage(
-                `Event ${newTitle} added successfully.`
-            );
+            setMessage(`Event ${newTitle} added successfully.`);
             getAllEvents();
         } catch (error) {
             console.error("Error adding document: ", error);
         }
-    };
+    }
+};
+
 
     return (
         <>
-            <h2 style={{ color: "#FF6B3B" }}> TJ Elementary Events Calendar</h2>
+            <h1 style={{ color: "#FF6B3B" }}> Events Calendar</h1>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Container
                     components={["DateCalendar", "DateCalendar"]}
@@ -143,7 +166,13 @@ export const Calendar = () => {
                         <DateCalendar
                             value={value}
                             onChange={handleDateChange}
-                            sx={{ color: "#FF6B3B" }}
+                            sx={{
+                                backgroundColor: "#FFFFFF", 
+                                padding: "16px",
+                                borderRadius: "8px", 
+                                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", 
+                                color: "#FF6B3B", 
+                            }}
                         />
                         <Modal
                             open={open}
@@ -170,20 +199,26 @@ export const Calendar = () => {
                                         eventsForDay.map((event) => (
                                             <div key={event.id}>
                                                 <Typography color="#1E2D5F">
-                                                    {event.Title}
+                                                    Title: {event.Title}
                                                     <div></div>
+                                                    Description:{" "}
                                                     {event.Description}
                                                 </Typography>
                                                 <Button
                                                     type="submit"
                                                     sx={{
-                                                        color:"#FFFFFF",
+                                                        color: "#FFFFFF",
                                                         backgroundColor:
                                                             "#1E2D5F",
+                                                        "&:hover": {
+                                                            backgroundColor:
+                                                                "#008080",
+                                                        },
                                                     }}
-                                                    onClick={() =>
-                                                        handleDelete(event.id)
-                                                    }
+                                                    onClick={() => {
+                                                        handleDelete(event.id);
+                                                        handleClose();
+                                                    }}
                                                 >
                                                     Delete
                                                 </Button>
@@ -200,19 +235,22 @@ export const Calendar = () => {
                     </DemoItem>
                 </Container>
             </LocalizationProvider>
+
             <Grid item xs={12}>
-                <Button
-                    onClick={() => setShowModal(true)}
-                    variant="contained"
-                    color="primary"
-                    type="submit"
-                    sx={{
-                        backgroundColor: "teal",
-                        "&:hover": { backgroundColor: "#008080" },
-                    }}
-                >
-                    Add Event
-                </Button>
+                <div style={{ marginTop: "16px" }}>
+                    <Button
+                        onClick={() => setShowModal(true)}
+                        variant="contained"
+                        color="primary"
+                        type="submit"
+                        sx={{
+                            backgroundColor: "teal",
+                            "&:hover": { backgroundColor: "#1E2D5F" },
+                        }}
+                    >
+                        Add Event
+                    </Button>
+                </div>
                 <Modal open={showModal} onClose={() => closeModal()}>
                     <Box sx={style}>
                         <Typography
@@ -279,13 +317,17 @@ export const Calendar = () => {
                                 />
                             </form>
                             <Button
-                                onClick={() => addEvent()}
+                                onClick={() => {
+                                    addEvent();
+                                    setShowModal(false);
+                                    getAllEvents();
+                                }}
                                 variant="contained"
                                 color="primary"
                                 type="submit"
                                 sx={{
                                     backgroundColor: "teal",
-                                    "&:hover": { backgroundColor: "#008080" },
+                                    "&:hover": { backgroundColor: "#1E2D5F" },
                                 }}
                             >
                                 Save Event

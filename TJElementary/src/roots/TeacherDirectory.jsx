@@ -113,7 +113,7 @@ export const TeacherDirectory = () => {
     );
 
     return (
-        <Container sx={{ display: 'flex', flexDirection: 'column', width: '93vw'}}>
+        <Container sx={{ width: '93vw'}}>
             <h1>Teacher Directory</h1>
             {<p>{message}</p>}
             <form onSubmit={handleSubmit}>
@@ -230,10 +230,10 @@ export const TeacherDirectory = () => {
                                                 <MenuItem value="Spanish">Spanish</MenuItem>
                                             </Select>
                                         </FormControl>
-                                        <Button variant="contained" color="primary" onClick={() => handleSave(teacher.id)} sx={{ marginRight: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' } }}>
+                                        <Button variant="contained" color="primary" onClick={() => handleSave(teacher.id)} sx={{ marginRight: '10px', marginTop: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' } }}>
                                             Save
                                         </Button>
-                                        <Button variant="contained" color="primary" onClick={handleCancel} sx={{ marginRight: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' } }}>
+                                        <Button variant="contained" color="primary" onClick={handleCancel} sx={{ marginRight: '10px', marginTop: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' } }}>
                                             Cancel
                                         </Button>
                                     </>
@@ -248,12 +248,21 @@ export const TeacherDirectory = () => {
                                             onClick={() => handleEdit(teacher)}
                                             sx={{
                                                 marginRight: '10px',
+                                                marginTop: '10px',
                                                 backgroundColor: 'teal',
                                                 '&:hover': { backgroundColor: '#008080' }
                                             }}>
                                             Edit
                                         </Button>
-                                        <Button variant="contained" color="secondary" onClick={() => handleDelete(teacher.id)} sx={{ backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' } }}>
+                                        <Button 
+                                        variant="contained" 
+                                        color="secondary" 
+                                        onClick={() => handleDelete(teacher.id)} 
+                                        sx={{ 
+                                            backgroundColor: 'teal',
+                                            '&:hover': { backgroundColor: '#008080' },
+                                            marginTop: "10px",
+                                            }}>
                                             Delete
                                         </Button>
                                     </>
