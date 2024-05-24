@@ -143,7 +143,14 @@ export const Calendar = () => {
                         <DateCalendar
                             value={value}
                             onChange={handleDateChange}
-                            sx={{ color: "#FF6B3B" }}
+                            //sx={{ color: "#FF6B3B" }}
+                            sx={{
+                                backgroundColor: "#FFFFFF", // White background
+                                padding: "16px", // Padding inside the box
+                                borderRadius: "8px", // Rounded corners
+                                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
+                                color: "#FF6B3B", // Custom color for text or other elements if needed
+                            }}
                         />
                         <Modal
                             open={open}
@@ -170,16 +177,21 @@ export const Calendar = () => {
                                         eventsForDay.map((event) => (
                                             <div key={event.id}>
                                                 <Typography color="#1E2D5F">
-                                                    {event.Title}
+                                                    Title: {event.Title}
                                                     <div></div>
+                                                    Description:{" "}
                                                     {event.Description}
                                                 </Typography>
                                                 <Button
                                                     type="submit"
                                                     sx={{
-                                                        color:"#FFFFFF",
+                                                        color: "#FFFFFF",
                                                         backgroundColor:
                                                             "#1E2D5F",
+                                                        "&:hover": {
+                                                            backgroundColor:
+                                                                "#008080",
+                                                        },
                                                     }}
                                                     onClick={() =>
                                                         handleDelete(event.id)
@@ -200,7 +212,9 @@ export const Calendar = () => {
                     </DemoItem>
                 </Container>
             </LocalizationProvider>
+            
             <Grid item xs={12}>
+                <div style={{ marginTop: "16px" }}> 
                 <Button
                     onClick={() => setShowModal(true)}
                     variant="contained"
@@ -213,6 +227,7 @@ export const Calendar = () => {
                 >
                     Add Event
                 </Button>
+                </div>
                 <Modal open={showModal} onClose={() => closeModal()}>
                     <Box sx={style}>
                         <Typography
