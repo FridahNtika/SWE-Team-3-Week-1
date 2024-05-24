@@ -14,6 +14,7 @@ import {
     TextField,
     Container,
 } from "@mui/material";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { db } from "../../firebase";
 import {
@@ -42,6 +43,9 @@ export const Calendar = () => {
     const [newYear, setNewYear] = React.useState("");
     const [newTitle, setNewTitle] = React.useState("");
     const [newDescription, setNewDescription] = React.useState("");
+    const [newHour, setNewHour] = React.useState("");
+    const [newMinute, setNewMinute] = React.useState("");
+    const [newTimeValue, setNewTimeValue] = React.useState("");
 
     const [showModal, setShowModal] = React.useState(false);
     const openModal = () => setShowModal(true);
@@ -86,6 +90,9 @@ export const Calendar = () => {
             console.error("Error getting documents: ", error);
         }
     };
+    React.useEffect(() => {
+        setNewTimeValue(dayjs());
+    }, []);
 
     React.useEffect(() => {
         getAllEvents();
@@ -113,46 +120,55 @@ export const Calendar = () => {
         handleOpen();
     };
     const handleNewDateChange = (newValue) => {
-        setNewDateValue(newValue);
+        setNewValue(newValue);
         setNewYear(newValue.year());
         setNewMonth(newValue.month() + 1);
         setNewDay(newValue.date());
     };
 
-const addEvent = async () => {
-    if (newMonth === "") {
-        try {
-            const docRef = await addDoc(collection(db, "events"), {
-                Month: month,
-                Day: day,
-                Year: year,
-                Description: newDescription,
-                Title: newTitle,
-            });
-            console.log("Created doc with ID: ", docRef.id);
-            setMessage(`Event ${newTitle} added successfully.`);
-            getAllEvents();
-        } catch (error) {
-            console.error("Error adding document: ", error);
-        }
-    } else {
-        try {
-            const docRef = await addDoc(collection(db, "events"), {
-                Month: newMonth,
-                Day: newDay,
-                Year: newYear,
-                Description: newDescription,
-                Title: newTitle,
-            });
-            console.log("Created doc with ID: ", docRef.id);
-            setMessage(`Event ${newTitle} added successfully.`);
-            getAllEvents();
-        } catch (error) {
-            console.error("Error adding document: ", error);
-        }
-    }
-};
+    const handleNewTimeChange = (newValue) => {
+        setNewTimeValue(newValue);
+        setNewHour(newValue.hour());
+        setNewMinute(newValue.minute());
+    };
 
+    const addEvent = async () => {
+        if (newMonth === "") {
+            try {
+                const docRef = await addDoc(collection(db, "events"), {
+                    Month: month,
+                    Day: day,
+                    Year: year,
+                    Hour: newHour,
+                    Minute: newMinute,
+                    Description: newDescription,
+                    Title: newTitle,
+                });
+                console.log("Created doc with ID: ", docRef.id);
+                setMessage(`Event ${newTitle} added successfully.`);
+                getAllEvents();
+            } catch (error) {
+                console.error("Error adding document: ", error);
+            }
+        } else {
+            try {
+                const docRef = await addDoc(collection(db, "events"), {
+                    Month: newMonth,
+                    Day: newDay,
+                    Year: newYear,
+                    Description: newDescription,
+                    Title: newTitle,
+                    Hour: newHour,
+                    Minute: newMinute,
+                });
+                console.log("Created doc with ID: ", docRef.id);
+                setMessage(`Event ${newTitle} added successfully.`);
+                getAllEvents();
+            } catch (error) {
+                console.error("Error adding document: ", error);
+            }
+        }
+    };
 
     return (
         <>
@@ -167,11 +183,11 @@ const addEvent = async () => {
                             value={value}
                             onChange={handleDateChange}
                             sx={{
-                                backgroundColor: "#FFFFFF", 
+                                backgroundColor: "#FFFFFF",
                                 padding: "16px",
-                                borderRadius: "8px", 
-                                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", 
-                                color: "#FF6B3B", 
+                                borderRadius: "8px",
+                                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                                color: "#FF6B3B",
                             }}
                         />
                         <Modal
@@ -200,9 +216,12 @@ const addEvent = async () => {
                                             <div key={event.id}>
                                                 <Typography color="#1E2D5F">
                                                     Title: {event.Title}
-                                                    <div></div>
+                                                    <br></br>
                                                     Description:{" "}
                                                     {event.Description}
+                                                    <br></br>
+                                                    Time:{""}
+                                                    {event.Hour}:{event.Minute}
                                                 </Typography>
                                                 <Button
                                                     type="submit"
@@ -267,11 +286,27 @@ const addEvent = async () => {
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DemoContainer components={["DatePicker"]}>
                                     <DatePicker
+                                        slotProps={{
+                                            textField: { size: "small" },
+                                            sx: {
+                                                width: "100px",
+                                            },
+                                        }}
                                         label="Date of event"
                                         color="#FF6B3B"
                                         variant="outlined"
                                         value={newDateValue}
                                         onChange={handleNewDateChange}
+                                    />
+                                    <TimePicker
+                                        slotProps={{
+                                            textField: { size: "small" },
+                                            sx: {
+                                                width: "100px", 
+                                            },
+                                        }}
+                                        value={newTimeValue}
+                                        onChange={handleNewTimeChange}
                                     />
                                 </DemoContainer>
                             </LocalizationProvider>
