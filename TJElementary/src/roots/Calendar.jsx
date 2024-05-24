@@ -5,7 +5,15 @@ import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import { Modal, Box, Typography, Grid, Button, TextField, Container } from "@mui/material";
+import {
+    Modal,
+    Box,
+    Typography,
+    Grid,
+    Button,
+    TextField,
+    Container,
+} from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { db } from "../../firebase";
 import {
@@ -104,14 +112,13 @@ export const Calendar = () => {
         setDay(newValue.date());
         handleOpen();
     };
-        const handleNewDateChange = (newValue) => {
-            setNewDateValue(newValue);
-            setNewYear(newValue.year());
-            setNewMonth(newValue.month() + 1);
-            setNewDay(newValue.date());
-        };
+    const handleNewDateChange = (newValue) => {
+        setNewDateValue(newValue);
+        setNewYear(newValue.year());
+        setNewMonth(newValue.month() + 1);
+        setNewDay(newValue.date());
+    };
 
-    
     const addEvent = async () => {
         try {
             const docRef = await addDoc(collection(db, "events"), {
@@ -122,9 +129,7 @@ export const Calendar = () => {
                 Title: newTitle,
             });
             console.log("Created doc with ID: ", docRef.id);
-            setMessage(
-                `Event ${newTitle} added successfully.`
-            );
+            setMessage(`Event ${newTitle} added successfully.`);
             getAllEvents();
         } catch (error) {
             console.error("Error adding document: ", error);
@@ -193,9 +198,10 @@ export const Calendar = () => {
                                                                 "#008080",
                                                         },
                                                     }}
-                                                    onClick={() =>
-                                                        handleDelete(event.id)
-                                                    }
+                                                    onClick={() => {
+                                                        handleDelete(event.id);
+                                                        handleClose();
+                                                    }}
                                                 >
                                                     Delete
                                                 </Button>
@@ -212,21 +218,21 @@ export const Calendar = () => {
                     </DemoItem>
                 </Container>
             </LocalizationProvider>
-            
+
             <Grid item xs={12}>
-                <div style={{ marginTop: "16px" }}> 
-                <Button
-                    onClick={() => setShowModal(true)}
-                    variant="contained"
-                    color="primary"
-                    type="submit"
-                    sx={{
-                        backgroundColor: "teal",
-                        "&:hover": { backgroundColor: "#008080" },
-                    }}
-                >
-                    Add Event
-                </Button>
+                <div style={{ marginTop: "16px" }}>
+                    <Button
+                        onClick={() => setShowModal(true)}
+                        variant="contained"
+                        color="primary"
+                        type="submit"
+                        sx={{
+                            backgroundColor: "teal",
+                            "&:hover": { backgroundColor: "#1E2D5F" },
+                        }}
+                    >
+                        Add Event
+                    </Button>
                 </div>
                 <Modal open={showModal} onClose={() => closeModal()}>
                     <Box sx={style}>
@@ -294,13 +300,17 @@ export const Calendar = () => {
                                 />
                             </form>
                             <Button
-                                onClick={() => addEvent()}
+                                onClick={() => {
+                                    addEvent();
+                                    setShowModal(false);
+                                    getAllEvents();
+                                }}
                                 variant="contained"
                                 color="primary"
                                 type="submit"
                                 sx={{
                                     backgroundColor: "teal",
-                                    "&:hover": { backgroundColor: "#008080" },
+                                    "&:hover": { backgroundColor: "#1E2D5F" },
                                 }}
                             >
                                 Save Event
