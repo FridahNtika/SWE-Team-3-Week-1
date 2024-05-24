@@ -90,14 +90,16 @@ export const Grades = () => {
         const { value } = event.target;
         const updatedStudents = students.map((student) => {
             if (student.id === studentId) {
-                const newGrades = {
-                    ...student.grades,
-                    [assignmentId]: value
-                };
                 return {
                     ...student,
-                    grades: newGrades,
-                    grade: calculateOverallGrade(newGrades)
+                    grades: {
+                        ...student.grades,
+                        [assignmentId]: value
+                    },
+                    grade: calculateOverallGrade({
+                        ...student.grades,
+                        [assignmentId]: value
+                    })
                 };
             }
             return student;
@@ -114,14 +116,8 @@ export const Grades = () => {
     const updateAssignmentGrade = async (studentId, assignmentId, grade) => {
         try {
             const studentDoc = doc(db, "students", studentId);
-            const gradeDoc = doc(db, "grades", `${studentId}_${assignmentId}`);
             await updateDoc(studentDoc, {
                 [`grades.${assignmentId}`]: grade
-            });
-            await updateDoc(gradeDoc, {
-                studentId,
-                assignmentId,
-                grade
             });
             fetchStudents();
         } catch (error) {
@@ -161,8 +157,8 @@ export const Grades = () => {
         <Container sx={{ display: 'flex', flexDirection: 'column', width: '93vw'}}>
             <h1>Teacher Gradebook</h1>
             <div className="student-management">
-                
-                    <Grid item xs={12} sm={6}>
+                <Grid container spacing={3}>
+                    <Grid item xs={12}>
                         <div className="new-student-container">
                             <Typography variant="h6">Select Student</Typography>
                             <TextField
@@ -175,7 +171,6 @@ export const Grades = () => {
                                     style: { color: '#FF6B3B' }
                                 }}
                                 size="small"
-                                margin="normal"
                                 value={selectedStudent?.id || ""}
                                 onChange={handleSelectStudent}
                                 SelectProps={{
@@ -193,7 +188,7 @@ export const Grades = () => {
                             </TextField>
                         </div>
                     </Grid>
-                    
+                    <Grid item xs={12}>
                         <div className="new-assignment-container">
                             <Typography variant="h6">Add New Assignment</Typography>
                             <TextField
@@ -212,35 +207,38 @@ export const Grades = () => {
                                     style: { color: '#FF6B3B' }
                                 }}
                             />
-
                             <Button variant="contained" color="primary" onClick={addAssignment} sx={{ marginTop: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>Add Assignment</Button>
                         </div>
-                
+                    </Grid>
+                </Grid>
                 {selectedStudent && (
-                    <div className="edit-grade-container">
-                        <Typography variant="h6">Edit Final Grade for {selectedStudent.firstName} {selectedStudent.lastName}</Typography>
-                        <TextField
-                            type="text"
-                            label="Edit Grade"
-                            name="editgrade"
-                            size="small"
-                            value={currentGrade}
-                            onChange={(e) => setCurrentGrade(e.target.value)}
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            InputProps={{
-                                style: { backgroundColor: 'white', borderColor: 'orange' }
-                            }}
-                            InputLabelProps={{
-                                style: { color: '#FF6B3B' }
-                            }}
-                        />
-
-                        <Button variant="contained" color="primary" onClick={updateGrade} sx={{ marginTop: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>Update Final Grade</Button>
-                    </div>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12}>
+                            <div className="edit-grade-container">
+                                <Typography variant="h6">Edit Final Grade for {selectedStudent.firstName} {selectedStudent.lastName}</Typography>
+                                <TextField
+                                    type="text"
+                                    label="Edit Grade"
+                                    name="editgrade"
+                                    size="small"
+                                    value={currentGrade}
+                                    onChange={(e) => setCurrentGrade(e.target.value)}
+                                    variant="outlined"
+                                    fullWidth
+                                    margin="normal"
+                                    InputProps={{
+                                        style: { backgroundColor: 'white', borderColor: 'orange' }
+                                    }}
+                                    InputLabelProps={{
+                                        style: { color: '#FF6B3B' }
+                                    }}
+                                />
+                                <Button variant="contained" color="primary" onClick={updateGrade} sx={{ marginTop: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>Update Final Grade</Button>
+                            </div>
+                        </Grid>
+                    </Grid>
                 )}
-                {/* <div className="new-student-container">
+                <div className="new-student-container">
                     <Typography variant="h6">Add New Student</Typography>
                     <TextField
                         type="text"
@@ -277,7 +275,7 @@ export const Grades = () => {
                         }}
                     />
                     <Button variant="contained" color="primary" onClick={addStudent} sx={{ marginTop: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>Add Student</Button>
-                </div> */}
+                </div>
                 <div className="assignments-list">
                     <Typography variant="h6">Assignments</Typography>
                     <Grid container spacing={2}>
@@ -299,7 +297,7 @@ export const Grades = () => {
                 {showFullRoster && (
                     <div className="student-roster">
                         <Typography variant="h2">__________________________________</Typography>
-                        <Typography variant="h4">Full Student Roster & Grades</Typography>
+                        <Typography variant="h4">Student Roster</Typography>
                         <table className="roster-table">
                             <thead>
                                 <tr>
