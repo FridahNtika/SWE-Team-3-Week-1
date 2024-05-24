@@ -119,7 +119,23 @@ export const Calendar = () => {
         setNewDay(newValue.date());
     };
 
-    const addEvent = async () => {
+const addEvent = async () => {
+    if (newMonth === "") {
+        try {
+            const docRef = await addDoc(collection(db, "events"), {
+                Month: month,
+                Day: day,
+                Year: year,
+                Description: newDescription,
+                Title: newTitle,
+            });
+            console.log("Created doc with ID: ", docRef.id);
+            setMessage(`Event ${newTitle} added successfully.`);
+            getAllEvents();
+        } catch (error) {
+            console.error("Error adding document: ", error);
+        }
+    } else {
         try {
             const docRef = await addDoc(collection(db, "events"), {
                 Month: newMonth,
@@ -134,11 +150,13 @@ export const Calendar = () => {
         } catch (error) {
             console.error("Error adding document: ", error);
         }
-    };
+    }
+};
+
 
     return (
         <>
-            <h2 style={{ color: "#FF6B3B" }}> TJ Elementary Events Calendar</h2>
+            <h1 style={{ color: "#FF6B3B" }}> Events Calendar</h1>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Container
                     components={["DateCalendar", "DateCalendar"]}
@@ -148,13 +166,12 @@ export const Calendar = () => {
                         <DateCalendar
                             value={value}
                             onChange={handleDateChange}
-                            //sx={{ color: "#FF6B3B" }}
                             sx={{
-                                backgroundColor: "#FFFFFF", // White background
-                                padding: "16px", // Padding inside the box
-                                borderRadius: "8px", // Rounded corners
-                                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
-                                color: "#FF6B3B", // Custom color for text or other elements if needed
+                                backgroundColor: "#FFFFFF", 
+                                padding: "16px",
+                                borderRadius: "8px", 
+                                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", 
+                                color: "#FF6B3B", 
                             }}
                         />
                         <Modal
