@@ -246,6 +246,9 @@ export const StudentDirectory = () => {
                                             onChange={handleChange}
                                             fullWidth
                                             margin="normal"
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
                                         />
                                         <Button variant="contained" color="primary" onClick={handleSave} sx={{ marginRight: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>
                                             Save
