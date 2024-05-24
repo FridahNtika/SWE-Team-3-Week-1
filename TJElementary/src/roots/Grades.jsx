@@ -175,6 +175,7 @@ export const Grades = () => {
                                     style: { color: '#FF6B3B' }
                                 }}
                                 size="small"
+                                margin="normal"
                                 value={selectedStudent?.id || ""}
                                 onChange={handleSelectStudent}
                                 SelectProps={{
@@ -240,7 +241,7 @@ export const Grades = () => {
                         <Button variant="contained" color="primary" onClick={updateGrade} sx={{ marginTop: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>Update Final Grade</Button>
                     </div>
                 )}
-                <div className="new-student-container">
+                {/* <div className="new-student-container">
                     <Typography variant="h6">Add New Student</Typography>
                     <TextField
                         type="text"
@@ -277,7 +278,7 @@ export const Grades = () => {
                         }}
                     />
                     <Button variant="contained" color="primary" onClick={addStudent} sx={{ marginTop: '10px', backgroundColor: 'teal', '&:hover': { backgroundColor: '#008080' }}}>Add Student</Button>
-                </div>
+                </div> */}
                 <div className="assignments-list">
                     <Typography variant="h6">Assignments</Typography>
                     <Grid container spacing={2}>
