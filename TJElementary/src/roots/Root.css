@@ -122,3 +122,27 @@
 .slideshow-image.transitioning {
   opacity: 0;
 }
+
+.slide-indicator {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.indicator-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #bbb;
+  margin: 0 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.indicator-dot.active {
+  background-color: #008080;
+}
