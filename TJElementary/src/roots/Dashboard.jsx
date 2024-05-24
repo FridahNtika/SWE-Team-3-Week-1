@@ -23,15 +23,9 @@ export const Dashboard = () => {
     const fetchCourses = async () => {
         try {
             const data = await getDocs(collection(db, "classes"));
-            let temp = [];
-            data.forEach((doc) => {
-                temp.push({ id: doc.id, ...doc.data() });
-            });
             let coursesArray = [];
-
-            temp.forEach((item) => {
-                coursesArray.push(item);
-            });
+            data.forEach((doc) => {coursesArray.push({ id: doc.id, ...doc.data() });});
+            coursesArray.sort((a, b) => a.Title.localeCompare(b.Title));
             const total = coursesArray.length;
             setTotal(total);
             setCourses(coursesArray);
